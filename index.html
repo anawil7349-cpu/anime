@@ -90,7 +90,7 @@
 
         // 3. ข้อมูลร้านค้าของคุณ
         const EXPECTED_AMOUNT = 49.00; // ราคาการ์ด (บาท)
-        const RECEIVER_KEYWORD = "อนาวิล ชัยภาคย์พิบูล"; // คีย์เวิร์ดชื่อบัญชีของคุณ เพื่อป้องกันสลิปปลอม
+        const RECEIVER_KEYWORD = "อนาวิล"; // คีย์เวิร์ดชื่อบัญชีของคุณ เพื่อป้องกันสลิปปลอม
         const BASE_CARD_URL = "card.html"; // ชื่อไฟล์การ์ด 3D
         
         // ==========================================
@@ -190,13 +190,13 @@
             formData.append('files', file); 
 
             try {
-                const response = await fetch(`https://api.slipok.com/api/line/apikey/${SLIPOK_BRANCH_ID}`, {
-                    method: 'POST',
-                    headers: {
-                        'x-authorization': SLIPOK_API_KEY
-                    },
-                    body: formData
-                });
+                const response = await fetch(`https://corsproxy.io/?https://api.slipok.com/api/line/apikey/${SLIPOK_BRANCH_ID}`, {
+                method: 'POST',
+                headers: {
+                    'x-authorization': SLIPOK_API_KEY
+                },
+                body: formData
+            });
 
                 const data = await response.json();
 
