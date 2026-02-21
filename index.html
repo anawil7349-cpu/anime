@@ -3,74 +3,426 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สร้างการ์ดวันเกิด 3D ของคุณ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>สร้างการ์ดวันเกิด 3D พรีเมียม | 3D Birthday Card Creator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mali', sans-serif; }
-        body { background-color: #f0f4f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        
-        .container { background: white; width: 100%; max-width: 500px; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #ff3366; margin-bottom: 20px; font-size: 1.8rem; }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
-        input[type="text"], textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; outline: none; transition: border 0.3s; }
-        input[type="text"]:focus, textarea:focus { border-color: #ff3366; }
-        
-        input[type="file"] { width: 100%; padding: 10px; border: 2px dashed #cbd5e1; border-radius: 10px; cursor: pointer; background: #f8fafc; transition: all 0.3s ease; }
-        input[type="file"]:hover { border-color: #ff3366; }
-        .upload-status { font-size: 0.9rem; margin-top: 5px; color: #10b981; font-weight: bold; min-height: 20px;}
-        
-        .btn { width: 100%; padding: 15px; background: linear-gradient(to right, #ff3366, #ff6b9e); color: white; border: none; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px; }
-        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4); }
-        .btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+        /* =========================================
+           --- โทนสีล้ำสมัย & ตัวแปร ---
+           ========================================= */
+        :root {
+            --primary: #ff0844;
+            --primary-gradient: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            --secondary: #4facfe;
+            --success: #00f2fe;
+            --success-color: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --shadow-glass: 0 20px 40px -10px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+            --shadow-glow: 0 10px 25px -5px rgba(255, 8, 68, 0.4);
+            
+            --radius-lg: 30px;
+            --radius-md: 20px;
+            --radius-sm: 12px;
+        }
 
-        #paymentSection, #resultSection { display: none; text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e2e8f0; }
-        .result-box { background: #f8fafc; padding: 15px; border-radius: 10px; margin-bottom: 15px; word-break: break-all; font-size: 1.2rem; color: #ff3366; border: 1px solid #e2e8f0; text-align: center; font-weight: bold;}
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mali', sans-serif; }
         
-        .btn-copy { background: #4facfe; margin-bottom: 10px; }
-        .btn-test { background: #10b981; }
-        .hint-text-limit { font-size: 0.8rem; color: #64748b; margin-top: 5px; }
+        /* พื้นหลังแบบ Colorful Mesh Gradient */
+        body { 
+            background-color: #fdfbfb;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(204, 100%, 76%, 0.5) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(43, 100%, 74%, 0.4) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, hsla(271, 100%, 76%, 0.4) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main); 
+            display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; 
+            line-height: 1.6;
+        }
+        
+        /* =========================================
+           --- โครงสร้างหลัก (Glass Container) ---
+           ========================================= */
+        .container { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            width: 100%; max-width: 450px; 
+            padding: 40px 30px; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-glass); 
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            font-size: 2rem; 
+            font-weight: 800;
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        /* ข้อความแบบไล่สี */
+        h1 .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        h1 span.icon { 
+            font-size: 3rem; 
+            margin-bottom: 5px; 
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        
+        /* =========================================
+           --- ฟอร์ม (Form Elements) ---
+           ========================================= */
+        .form-group { margin-bottom: 25px; }
+        
+        label { 
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 10px; font-weight: 700; color: #334155; font-size: 1.05rem;
+        }
+        label i { color: var(--primary); font-size: 1.2rem;}
+        
+        .input-wrapper { position: relative; }
+        
+        input[type="text"], textarea { 
+            width: 100%; padding: 18px; 
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent; 
+            border-radius: var(--radius-md); 
+            font-size: 1rem; outline: none; transition: all 0.3s; 
+            color: var(--text-main);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        input[type="text"]:focus, textarea:focus { 
+            border-color: #ffb199; 
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 8, 68, 0.15);
+            transform: translateY(-2px);
+        }
+        textarea { resize: vertical; min-height: 110px; }
+
+        /* อัปโหลดรูปภาพ */
+        .file-upload-wrapper {
+            position: relative;
+            background: rgba(255,255,255,0.6);
+            border: 2px dashed #cbd5e1;
+            border-radius: var(--radius-md);
+            padding: 25px 20px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .file-upload-wrapper:hover {
+            border-color: var(--secondary);
+            background: rgba(240, 249, 255, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(79, 172, 254, 0.1);
+        }
+        .file-upload-wrapper i {
+            font-size: 2.5rem;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+            display: block;
+        }
+        .file-upload-wrapper:hover i { color: var(--secondary); transform: scale(1.1); }
+        .file-upload-wrapper p { margin: 0; color: var(--text-main); font-size: 1rem; font-weight: 600;}
+        .file-upload-wrapper span.sub-text { display: block; color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;}
+        
+        input[type="file"] { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer; z-index: 10;
+        }
+        
+        .upload-status { font-size: 0.95rem; margin-top: 10px; font-weight: 700; min-height: 20px; display: flex; justify-content: center; align-items: center; gap: 5px;}
+        .hint-text-limit { font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; display: flex; justify-content: flex-end; font-weight: 500;}
+        
+        /* =========================================
+           --- ปุ่ม (Buttons) ---
+           ========================================= */
+        .btn { 
+            width: 100%; padding: 18px; 
+            border: none; border-radius: 100px; /* ทรงแคปซูลทันสมัย */
+            font-size: 1.2rem; font-weight: 700; cursor: pointer; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            position: relative; overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient); color: white;
+            box-shadow: var(--shadow-glow);
+            margin-top: 15px;
+        }
+        .btn-primary::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transform: skewX(-20deg); transition: 0.5s;
+        }
+        .btn-primary:hover:not(:disabled) { 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 15px 30px -5px rgba(255, 8, 68, 0.5); 
+        }
+        .btn-primary:hover:not(:disabled)::after { left: 150%; }
+        .btn-primary:active:not(:disabled) { transform: translateY(1px); }
+        .btn-primary:disabled { 
+            background: #cbd5e1; color: #f8fafc; cursor: not-allowed; box-shadow: none; transform: none; 
+        }
+
+        .btn-copy-main { background: white; color: var(--text-main); border: 2px solid #cbd5e1; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);}
+        .btn-copy-main:hover { border-color: var(--secondary); color: var(--secondary); transform: translateY(-2px); box-shadow: 0 10px 20px rgba(79, 172, 254, 0.2);}
+        
+        .btn-preview { 
+            background: linear-gradient(135deg, #10b981, #059669); color: white; 
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4); text-decoration: none; 
+        }
+        .btn-preview:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5);}
+
+        /* =========================================
+           --- Sections (ซ่อนไว้รอทำงาน) ---
+           ========================================= */
+        #paymentSection, #resultSection { 
+            display: none; 
+            animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes scaleIn { 
+            from { opacity: 0; transform: scale(0.95); } 
+            to { opacity: 1; transform: scale(1); } 
+        }
+        
+        .section-header { text-align: center; margin-bottom: 25px;}
+        .section-header h2 { color: var(--text-main); font-size: 1.6rem; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px;}
+        .section-header p { color: var(--text-muted); font-size: 1rem; font-weight: 500;}
+
+        /* =========================================
+           --- ส่วนชำระเงิน (Premium Payment) ---
+           ========================================= */
+        .payment-box { 
+            background: rgba(255,255,255,0.7); 
+            border: 1px solid rgba(255,255,255,0.8); 
+            padding: 30px 20px; border-radius: var(--radius-lg); 
+            margin-bottom: 25px;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 10px 20px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .payment-price-tag {
+            text-align: center; margin-bottom: 25px;
+            padding-bottom: 25px; border-bottom: 2px dashed #cbd5e1;
+            position: relative;
+        }
+        /* ทำรอยหยักเหมือนตั๋ว */
+        .payment-price-tag::before, .payment-price-tag::after {
+            content: ''; position: absolute; bottom: -12px; width: 24px; height: 24px;
+            background: var(--glass-bg); border-radius: 50%;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .payment-price-tag::before { left: -32px; }
+        .payment-price-tag::after { right: -32px; }
+
+        .payment-price-tag span { display: block; color: var(--text-muted); font-size: 1rem; margin-bottom: 5px; font-weight: 700;}
+        .payment-price { font-size: 3.5rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; line-height: 1; filter: drop-shadow(0 5px 5px rgba(255, 8, 68, 0.2));}
+
+        .payment-methods { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        
+        .payment-method-item {
+            background: white; border: 1px solid var(--border-color);
+            padding: 16px; border-radius: var(--radius-md);
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .payment-method-item:hover { border-color: var(--secondary); box-shadow: 0 10px 15px rgba(79, 172, 254, 0.1); transform: translateX(5px);}
+        
+        .method-info { display: flex; align-items: center; gap: 15px; }
+        .method-logo { height: 40px; width: 40px; object-fit: contain; border-radius: 10px; background: #f8fafc; padding: 4px; border: 1px solid #e2e8f0;}
+        .method-details { display: flex; flex-direction: column; text-align: left; }
+        .method-name { font-weight: 800; font-size: 1.05rem; }
+        .method-number { font-size: 1.15rem; color: #334155; font-family: monospace; letter-spacing: 0.5px; font-weight: 600;}
+        
+        .copy-btn-sm { 
+            background: #f1f5f9; color: var(--text-main); border: none; 
+            padding: 10px 14px; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .copy-btn-sm:hover { background: #e2e8f0; transform: scale(1.05); }
+        .copy-btn-sm.success { background: var(--success-color); color: white; }
+
+        .account-owner { 
+            text-align: center; color: var(--text-main); font-size: 1rem; font-weight: 700;
+            background: rgba(255,255,255,0.8); padding: 12px; border-radius: var(--radius-sm);
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+
+        /* กล่องอัปโหลดสลิปแบบพิเศษ */
+        .slip-upload-box {
+            background: rgba(255, 255, 255, 0.9); border: 2px dashed #ffb199;
+            padding: 30px 20px; border-radius: var(--radius-md);
+            text-align: center; cursor: pointer; transition: 0.3s; position: relative;
+            box-shadow: 0 10px 20px rgba(255, 8, 68, 0.05);
+        }
+        .slip-upload-box:hover { background: white; border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 15px 25px rgba(255, 8, 68, 0.1); }
+        .slip-upload-box i { font-size: 3rem; color: var(--primary); margin-bottom: 15px; display: block; transition: 0.3s;}
+        .slip-upload-box:hover i { transform: scale(1.1); }
+        .slip-upload-box p { color: var(--text-main); font-weight: 800; margin-bottom: 5px; font-size: 1.1rem;}
+        .slip-upload-box span { display: block; color: var(--text-muted); font-size: 0.9rem; }
+        .slip-upload-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;}
+        
+        .slip-status { font-size: 1rem; margin-top: 15px; font-weight: 700; min-height: 24px; text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px;}
+
+        /* =========================================
+           --- ผลลัพธ์ (Result) ---
+           ========================================= */
+        .result-box { 
+            background: #f0fdf4; padding: 25px 20px; border-radius: var(--radius-md); 
+            margin-bottom: 25px; word-break: break-all; font-size: 1.2rem; color: var(--success-color); 
+            border: 2px solid #86efac; text-align: center; font-weight: 700;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02), 0 10px 15px rgba(16, 185, 129, 0.1);
+        }
+        
+        /* Loading Spinner */
+        .fa-spin { animation: fa-spin 1.5s infinite linear; }
+        @keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(359deg); } }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>✨ สร้างการ์ดวันเกิด 3D</h1>
         
         <div id="formSection">
+            <h1>
+                <span class="icon">🥳</span> 
+                <span class="text-gradient">สร้างการ์ดวันเกิด 3D</span>
+            </h1>
+            
             <div class="form-group">
-                <label>ข้อความอวยพร (ถ้าพิมพ์ต่อไม่ได้ให้เขียนบรรทัดใหม่ด้านล่าง):</label>
-                <textarea id="msgInput" rows="4" placeholder="สุขสันต์วันเกิดนะ!&#10;ขอให้มีความสุขมากๆ 💖"></textarea>
-                <div class="hint-text-limit">* จำกัดความยาว 20 ตัวอักษร/บรรทัด</div>
+                <label for="msgInput"><i class="fa-solid fa-pen-nib"></i> คำอวยพรสุดพิเศษ</label>
+                <div class="input-wrapper">
+                    <textarea id="msgInput" placeholder="สุขสันต์วันเกิดนะ!&#10;ขอให้มีความสุขมากๆ 💖&#10;(พิมพ์แล้วกด Enter เพื่อเว้นบรรทัด)"></textarea>
+                </div>
+                <div class="hint-text-limit">พิมพ์ได้สูงสุด 20 ตัวอักษร/บรรทัด</div>
             </div>
             
             <div class="form-group">
-                <label>อัปโหลดรูปภาพเจ้าของวันเกิด (รูปที่ 1):</label>
-                <input type="file" id="imageUpload1" accept="image/*">
-                <div class="upload-status" id="uploadStatus1"></div>
+                <label><i class="fa-solid fa-image"></i> ใส่รูปภาพ (สูงสุด 2 รูป)</label>
+                
+                <div class="file-upload-wrapper" style="margin-bottom: 12px;">
+                    <i class="fa-regular fa-image"></i>
+                    <p>อัปโหลดรูปภาพที่ 1</p>
+                    <span class="sub-text">แตะเพื่อเลือกรูปภาพ</span>
+                    <input type="file" id="imageUpload1" accept="image/*">
+                </div>
+                <div class="upload-status" id="uploadStatus1" style="color: var(--text-muted);"></div>
                 <input type="hidden" id="imgInputUrl1"> 
-            </div>
 
-            <div class="form-group">
-                <label>อัปโหลดรูปภาพเจ้าของวันเกิด (รูปที่ 2 - ไม่บังคับ):</label>
-                <input type="file" id="imageUpload2" accept="image/*">
-                <div class="upload-status" id="uploadStatus2"></div>
+                <div class="file-upload-wrapper" style="margin-top: 15px;">
+                    <i class="fa-regular fa-images"></i>
+                    <p>อัปโหลดรูปภาพที่ 2 <span style="color:var(--text-muted); font-weight:500;">(ไม่บังคับ)</span></p>
+                    <span class="sub-text">แตะเพื่อเลือกรูปภาพเพิ่ม</span>
+                    <input type="file" id="imageUpload2" accept="image/*">
+                </div>
+                <div class="upload-status" id="uploadStatus2" style="color: var(--text-muted);"></div>
                 <input type="hidden" id="imgInputUrl2"> 
             </div>
             
-            <button class="btn" id="generateBtn">สร้างการ์ดของขวัญ</button>
+            <button class="btn btn-primary" id="generateBtn">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> สร้างการ์ดของขวัญ
+            </button>
         </div>
 
         <div id="paymentSection">
+            <div class="section-header">
+                <h2><i class="fa-solid fa-lock" style="color: var(--primary);"></i> ปลดล็อกลิงก์</h2>
+                <p>ชำระเงินเพียงครั้งเดียว ใช้งานลิงก์ได้ตลอดไป</p>
             </div>
 
+            <div class="payment-box">
+                <div class="payment-price-tag">
+                    <span>ยอดชำระเงิน</span>
+                    <div class="payment-price">฿50.00</div>
+                </div>
+                
+                <div class="payment-methods">
+                    <div class="payment-method-item">
+                        <div class="method-info">
+                            <img src="https://i.ibb.co/TMKGdjfx/download.png" alt="TMN Logo" class="method-logo">
+                            <div class="method-details">
+                                <span class="method-name" style="color: #ea580c;">TrueMoney Wallet</span>
+                                <span class="method-number" id="tmNumberDisplay">081-521-6003</span>
+                            </div>
+                        </div>
+                        <button class="copy-btn-sm" onclick="copyNumber('tmNumberDisplay', this)"><i class="fa-regular fa-copy"></i> คัดลอก</button>
+                    </div>
+
+                    <div class="payment-method-item">
+                        <div class="method-info">
+                            <img src="https://i.ibb.co/b5WNRFSm/download-1.png" alt="PromptPay Logo" class="method-logo">
+                            <div class="method-details">
+                                <span class="method-name" style="color: #1e293b;">พร้อมเพย์ (PromptPay)</span>
+                                <span class="method-number" id="ppNumberDisplay">081-521-6003</span>
+                            </div>
+                        </div>
+                        <button class="copy-btn-sm" onclick="copyNumber('ppNumberDisplay', this)"><i class="fa-regular fa-copy"></i> คัดลอก</button>
+                    </div>
+                </div>
+
+                <div class="account-owner">
+                    <i class="fa-solid fa-circle-user" style="color: var(--primary);"></i> อนาวิล ชัภาคย์พิบูลย์
+                </div>
+            </div>
+
+            <div class="slip-upload-box" id="slipBoxUI">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <p>แนบสลิปโอนเงินที่นี่</p>
+                <span>AI จะตรวจสอบความถูกต้องอัตโนมัติ ⚡</span>
+                <input type="file" id="slipUpload" accept="image/jpeg, image/png">
+            </div>
+            <div class="slip-status" id="slipStatus"></div>
+        </div>
+
         <div id="resultSection">
-            <h2 style="color: #10b981; margin-bottom: 10px;">🎉 การ์ดของคุณพร้อมแล้ว!</h2>
-            <p style="color: #666; font-size: 0.9rem; margin-bottom: 10px;">ก๊อปปี้ลิงก์ด้านล่างนี้ ส่งให้คนพิเศษได้เลย</p>
+            <div class="section-header">
+                <h2 style="color: var(--success-color);"><i class="fa-solid fa-circle-check fa-bounce"></i> เสร็จสมบูรณ์!</h2>
+                <p>การ์ดวันเกิด 3D ของคุณพร้อมใช้งานแล้ว</p>
+            </div>
+            
             <div class="result-box" id="finalLink"></div>
-            <button class="btn btn-copy" id="copyBtn">📋 ก๊อปปี้ลิงก์</button>
-            <a href="#" target="_blank" class="btn btn-test" id="testBtn" style="display: block; text-decoration: none; text-align: center;">▶️ กดเพื่อดูการ์ด</a>
+            
+            <button class="btn btn-copy-main" id="copyBtn">
+                <i class="fa-solid fa-link"></i> คัดลอกลิงก์ส่งให้เพื่อน
+            </button>
+            <a href="#" target="_blank" class="btn btn-preview" id="testBtn">
+                <i class="fa-solid fa-play"></i> เปิดดูการ์ดของคุณ
+            </a>
         </div>
     </div>
 
@@ -79,20 +431,43 @@
         const IMGBB_API_KEY = "d29f8833a989e9577e146d4f77d54c90"; 
         const BASE_CARD_URL = "card.html"; 
 
-        let generatedUrl = "";
+        // --- ⚙️ การตั้งค่า SlipOK (สำคัญมาก!) ⚙️ ---
+        const SLIPOK_API_KEY = "SLIPOKAK79JIJ"; 
+        const SLIPOK_BRANCH_ID = "61190"; 
+        
+        const EXPECTED_AMOUNT = 50.00; // ราคาขาย
+        const RECEIVER_TMN_LAST4 = "6003"; // 4 ตัวท้าย ทรูมันนี่
+        const RECEIVER_PP_LAST4 = "6003";  // 4 ตัวท้าย พร้อมเพย์
+
+        let generatedUrl = ""; 
         let uploadingCount = 0; 
 
         const formSection = document.getElementById('formSection');
+        const paymentSection = document.getElementById('paymentSection');
         const resultSection = document.getElementById('resultSection');
+        
         const generateBtn = document.getElementById('generateBtn');
         const copyBtn = document.getElementById('copyBtn');
         const finalLinkBox = document.getElementById('finalLink');
         const testBtn = document.getElementById('testBtn');
         const msgInput = document.getElementById('msgInput'); 
 
-        // --- ระบบ 0: จำกัดจำนวนตัวอักษร 20 ก้อน/บรรทัด ---
-        const segmenter = new Intl.Segmenter('th-TH', { granularity: 'grapheme' });
+        // ฟังก์ชันคัดลอกเบอร์โทร (UI สวยงาม)
+        function copyNumber(elementId, btnElement) {
+            const numText = document.getElementById(elementId).innerText.replace(/-/g, '');
+            navigator.clipboard.writeText(numText).then(() => {
+                const oldHTML = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-check"></i> คัดลอกแล้ว`;
+                btnElement.classList.add('success');
+                setTimeout(() => {
+                    btnElement.innerHTML = oldHTML;
+                    btnElement.classList.remove('success');
+                }, 2000);
+            });
+        }
 
+        // --- ระบบจำกัดตัวอักษร 20 ตัว/บรรทัด ---
+        const segmenter = new Intl.Segmenter('th-TH', { granularity: 'grapheme' });
         msgInput.addEventListener('input', function() {
             let text = this.value;
             let lines = text.split('\n');
@@ -113,11 +488,15 @@
             }
         });
 
-        // --- ระบบ 1: อัปโหลดรูปลูกค้าเข้า ImgBB ---
+        // --- ระบบอัปโหลดรูปลูกค้าเข้า ImgBB (UI สวยขึ้น) ---
         function setupImageUpload(inputId, statusId, hiddenUrlId) {
             const uploadInput = document.getElementById(inputId);
             const statusEl = document.getElementById(statusId);
             const hiddenUrlEl = document.getElementById(hiddenUrlId);
+            const wrapper = uploadInput.parentElement;
+            const icon = wrapper.querySelector('i');
+            const text = wrapper.querySelector('p');
+            const subText = wrapper.querySelector('span');
 
             uploadInput.addEventListener('change', async function() {
                 const file = this.files[0];
@@ -125,9 +504,14 @@
 
                 uploadingCount++;
                 generateBtn.disabled = true;
-                generateBtn.innerText = "กำลังประมวลผลรูปภาพ...";
-                statusEl.style.color = "#f59e0b";
-                statusEl.innerText = "กำลังอัปโหลดรูปภาพ... ⏳";
+                generateBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังอัปโหลด...`;
+                
+                // UI กำลังโหลด
+                icon.className = "fa-solid fa-cloud-arrow-up fa-bounce";
+                icon.style.color = "var(--secondary)";
+                text.innerText = "กำลังอัปโหลดรูปภาพ...";
+                subText.innerText = "กรุณารอสักครู่ ⏳";
+                statusEl.innerHTML = "";
 
                 const formData = new FormData();
                 formData.append('image', file);
@@ -139,20 +523,30 @@
                     const data = await response.json();
                     if (data.success) {
                         hiddenUrlEl.value = data.data.url; 
-                        statusEl.style.color = "#10b981";
-                        statusEl.innerText = "✅ อัปโหลดรูปสำเร็จแล้ว!";
+                        // UI สำเร็จ
+                        icon.className = "fa-solid fa-circle-check";
+                        icon.style.color = "var(--success-color)";
+                        text.innerText = file.name.length > 15 ? file.name.substring(0, 15) + "..." : file.name;
+                        subText.innerText = "อัปโหลดเสร็จสมบูรณ์ ✅";
+                        wrapper.style.borderColor = "var(--success-color)";
+                        wrapper.style.background = "#f0fdf4";
                     } else {
                         throw new Error("Upload failed");
                     }
                 } catch (error) {
-                    statusEl.style.color = "#ef4444";
-                    statusEl.innerText = "❌ อัปโหลดไม่สำเร็จ กรุณาลองใหม่";
+                    // UI ล้มเหลว
+                    icon.className = "fa-solid fa-circle-xmark";
+                    icon.style.color = "var(--danger)";
+                    text.innerText = "อัปโหลดล้มเหลว";
+                    subText.innerText = "แตะเพื่อลองใหม่อีกครั้ง";
+                    wrapper.style.borderColor = "var(--danger)";
+                    wrapper.style.background = "#fef2f2";
                     hiddenUrlEl.value = "";
                 } finally {
                     uploadingCount--;
                     if (uploadingCount === 0) {
                         generateBtn.disabled = false;
-                        generateBtn.innerText = `สร้างการ์ดของขวัญ`;
+                        generateBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> สร้างการ์ดของขวัญ`;
                     }
                 }
             });
@@ -161,20 +555,23 @@
         setupImageUpload('imageUpload1', 'uploadStatus1', 'imgInputUrl1');
         setupImageUpload('imageUpload2', 'uploadStatus2', 'imgInputUrl2');
 
-        // --- ระบบ 2: สร้าง URL จริงและย่อลิงก์ (Production Ready) ---
+        // --- ระบบสร้าง URL -> แล้วส่งไปหน้าจ่ายเงิน ---
         generateBtn.addEventListener('click', () => {
             const msgRaw = document.getElementById('msgInput').value.trim();
             const url1 = document.getElementById('imgInputUrl1').value;
             const url2 = document.getElementById('imgInputUrl2').value;
             
-            if(!msgRaw) { alert("กรุณากรอกข้อความอวยพรก่อนครับ!"); return; }
+            if(!msgRaw) { 
+                alert("กรุณากรอกข้อความอวยพรก่อนครับ!"); 
+                document.getElementById('msgInput').focus();
+                return; 
+            }
 
             generateBtn.disabled = true;
-            generateBtn.innerText = "กำลังสร้างลิงก์... ⏳";
+            generateBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังเตรียมการ์ด...`;
 
             const formattedMsg = msgRaw.replace(/\n/g, '|');
             
-            // ดึง URL จริงของเว็บไซต์ (ถ้ารันบน Github ก็จะดึงโดเมน Github มา)
             let currentPath = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
             let longUrl = `${currentPath}/${BASE_CARD_URL}?text=${encodeURIComponent(formattedMsg)}`;
             
@@ -185,21 +582,16 @@
                 longUrl += `&img=${encodeURIComponent(validUrls.join(','))}`;
             }
 
-            // ใช้ JSONP ย่อลิงก์
             const callbackName = 'shortenCallback_' + Math.round(100000 * Math.random());
             window[callbackName] = function(data) {
                 delete window[callbackName]; 
                 
-                // ถ้าย่อสำเร็จจะได้ลิงก์สั้น ถ้าไม่ได้ (เช่นทดสอบในคอม) จะโชว์ลิงก์ยาว
                 generatedUrl = data.shorturl ? data.shorturl : longUrl; 
 
+                // ปิดฟอร์ม โชว์หน้าชำระเงิน
                 formSection.style.display = 'none';
-                resultSection.style.display = 'block'; 
-                finalLinkBox.innerText = generatedUrl;
-                testBtn.href = generatedUrl;
-                
-                generateBtn.disabled = false;
-                generateBtn.innerText = `สร้างการ์ดของขวัญ`;
+                paymentSection.style.display = 'block'; 
+                window.scrollTo({ top: 0, behavior: 'smooth' }); 
             };
 
             const script = document.createElement('script');
@@ -213,13 +605,106 @@
             }, 5000);
         });
 
+        // --- ระบบตรวจสลิป SlipOK (AI) ---
+        const slipUpload = document.getElementById('slipUpload');
+        const slipStatus = document.getElementById('slipStatus');
+        const slipBoxUI = document.getElementById('slipBoxUI');
+
+        slipUpload.addEventListener('change', async function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            // UI ตอนกำลังตรวจสลิป
+            slipBoxUI.style.borderColor = "var(--warning)";
+            slipBoxUI.style.background = "#fffbeb";
+            slipBoxUI.querySelector('i').className = "fa-solid fa-robot fa-bounce";
+            slipBoxUI.querySelector('i').style.color = "var(--warning)";
+            slipBoxUI.querySelector('p').innerText = "AI กำลังตรวจสอบสลิป...";
+            slipBoxUI.querySelector('span').innerText = "กรุณารอสักครู่...";
+            
+            slipStatus.style.color = "var(--warning)";
+            slipStatus.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังเชื่อมต่อกับธนาคาร...`;
+            slipUpload.disabled = true;
+
+            const formData = new FormData();
+            formData.append('files', file); 
+
+            try {
+                const response = await fetch(`https://corsproxy.io/?https://api.slipok.com/api/line/apikey/${SLIPOK_BRANCH_ID}`, {
+                    method: 'POST',
+                    headers: { 'x-authorization': SLIPOK_API_KEY },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success === true) {
+                    const amount = data.data.amount;
+                    
+                    const receiverInfoStr = JSON.stringify(data.data.receiver || {}); 
+                    const isMatchTMN = receiverInfoStr.includes(RECEIVER_TMN_LAST4);
+                    const isMatchPP = receiverInfoStr.includes(RECEIVER_PP_LAST4);
+
+                    if (!isMatchTMN && !isMatchPP) {
+                        throw new Error(`บัญชีผู้รับไม่ถูกต้อง! (ไม่พบเลขลงท้าย ${RECEIVER_TMN_LAST4} หรือ ${RECEIVER_PP_LAST4})`);
+                    }
+
+                    if (amount >= EXPECTED_AMOUNT) {
+                        // UI ตรวจผ่าน
+                        slipBoxUI.style.borderColor = "var(--success-color)";
+                        slipBoxUI.style.background = "#f0fdf4";
+                        slipBoxUI.querySelector('i').className = "fa-solid fa-check-double";
+                        slipBoxUI.querySelector('i').style.color = "var(--success-color)";
+                        slipBoxUI.querySelector('p').innerText = "ตรวจสอบสำเร็จ!";
+                        slipBoxUI.querySelector('span').innerText = `ยอดเงิน ${amount} บาท ถูกต้อง`;
+                        
+                        slipStatus.style.color = "var(--success-color)";
+                        slipStatus.innerHTML = `<i class="fa-solid fa-unlock-keyhole"></i> ปลดล็อกลิงก์สำเร็จ...`;
+                        
+                        setTimeout(() => {
+                            paymentSection.style.display = 'none';
+                            resultSection.style.display = 'block';
+                            finalLinkBox.innerText = generatedUrl;
+                            testBtn.href = generatedUrl;
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 1500);
+                    } else {
+                        throw new Error(`ยอดเงินไม่ครบ (ต้องการ ฿${EXPECTED_AMOUNT} แต่โอนมา ฿${amount})`);
+                    }
+
+                } else {
+                    throw new Error(data.message || "สลิปไม่ถูกต้อง หรือถูกใช้งานไปแล้ว");
+                }
+
+            } catch (error) {
+                // UI ตรวจไม่ผ่าน
+                slipBoxUI.style.borderColor = "var(--danger)";
+                slipBoxUI.style.background = "#fef2f2";
+                slipBoxUI.querySelector('i').className = "fa-solid fa-circle-exclamation fa-shake";
+                slipBoxUI.querySelector('i').style.color = "var(--danger)";
+                slipBoxUI.querySelector('p').innerText = "ตรวจสอบไม่ผ่าน";
+                slipBoxUI.querySelector('span').innerText = "แตะเพื่ออัปโหลดรูปสลิปใหม่";
+
+                slipStatus.style.color = "var(--danger)";
+                slipStatus.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${error.message}`;
+                slipUpload.disabled = false; 
+                slipUpload.value = ''; 
+            }
+        });
+
+        // --- ปุ่ม Copy สำหรับผลลัพธ์ ---
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(generatedUrl).then(() => {
-                copyBtn.innerText = "✅ ก๊อปปี้สำเร็จ!";
-                copyBtn.style.background = "#10b981";
+                const oldHTML = copyBtn.innerHTML;
+                copyBtn.innerHTML = `<i class="fa-solid fa-check-double"></i> คัดลอกลิงก์สำเร็จ!`;
+                copyBtn.style.background = "var(--success-color)";
+                copyBtn.style.color = "white";
+                copyBtn.style.borderColor = "var(--success-color)";
                 setTimeout(() => {
-                    copyBtn.innerText = "📋 ก๊อปปี้ลิงก์";
-                    copyBtn.style.background = "#4facfe";
+                    copyBtn.innerHTML = oldHTML;
+                    copyBtn.style.background = "white";
+                    copyBtn.style.color = "var(--text-main)";
+                    copyBtn.style.borderColor = "#cbd5e1";
                 }, 2000);
             });
         });
