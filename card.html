@@ -19,7 +19,6 @@
             --cake-3: linear-gradient(to right, #fad961, #f76b1c);
             --cake-3-side: #c75400;
             
-            /* สีข้อความเริ่มต้น (ตอนยังไม่มีฉากกระดาษ) */
             --text-main-color: #000000;
             --text-main-stroke: #e0005e;
             --text-shadow: 0 4px 15px rgba(255, 255, 255, 0.9), 0 0 20px #e7e7e7, 0 0 40px #ff0055;
@@ -30,6 +29,7 @@
             --ray-color: rgba(255, 255, 255, 0.1);
 
             --cake-scale: 1;
+            --sparkle-color: #ffd700; /* สีของแสงวิบวับพื้นหลัง */
         }
 
         body.dreamy-mode {
@@ -50,9 +50,10 @@
             --star-opacity: 0;
             --cloud-opacity: 0.8;
             --ray-color: rgba(255, 255, 255, 0.4);
+            --sparkle-color: #ffffff; /* สีของแสงวิบวับพื้นหลังในโหมดฝัน */
         }
 
-        /* 📱 จัดการหน้าจอมือถือ */
+        /* 📱 จัดการหน้าจอมือถือ + ลดกราฟิกให้ลื่นไหล */
         @media (max-width: 600px) {
             :root { --cake-scale: 0.65; }
             .cartoon-placeholder { top: 18% !important; bottom: auto !important; }
@@ -61,6 +62,12 @@
             .cake-container { margin-top: -15vh !important; }
             .text-container { top: 65% !important; bottom: 5vh !important; }
             .theme-toggle { padding: 3px 10px !important; font-size: 1rem !important; }
+            
+            /* ลดแสงเงาหนักๆ บนมือถือ ให้เครื่องไม่ร้อนและกระตุก */
+            .layer::before { box-shadow: none !important; }
+            .layer::after { box-shadow: none !important; }
+            .cake-board { box-shadow: 0 10px 15px rgba(0,0,0,0.4) !important; }
+            .icing { filter: none !important; box-shadow: none !important;}
         }
 
         /* --- ตั้งค่าพื้นฐาน --- */
@@ -81,33 +88,30 @@
         .theme-toggle:hover { background: rgba(255,255,255,0.4); transform: scale(1.05); }
         .theme-toggle span { font-family: 'Mali', sans-serif; font-size: 1rem; color: #fff; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
-        /* --- เอฟเฟกต์ฉากหลัง --- */
-        .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: var(--star-opacity); transition: opacity 1s ease; background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px); background-size: 550px 550px, 350px 350px, 250px 250px; animation: starMove 200s linear infinite; z-index: 1; }
-        .light-rays { position: absolute; top: 50%; left: 50%; width: 150vmax; height: 150vmax; background: conic-gradient(from 0deg, transparent 0%, var(--ray-color) 10%, transparent 20%, var(--ray-color) 30%, transparent 40%, var(--ray-color) 50%, transparent 60%, var(--ray-color) 70%, transparent 80%, var(--ray-color) 90%, transparent 100%); transform: translate(-50%, -50%); animation: rotate-rays 20s linear infinite; opacity: 0; z-index: 5; transition: opacity 1s ease, background 1s ease; }
+        /* --- เอฟเฟกต์ฉากหลัง (ของเดิม) --- */
+        .stars { position: absolute; top: -100%; left: -100%; width: 300%; height: 300%; pointer-events: none; opacity: var(--star-opacity); transition: opacity 1s ease; background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px); background-size: 550px 550px, 350px 350px, 250px 250px; animation: starMoveFast 150s linear infinite; z-index: 1; will-change: transform; }
+        .light-rays { position: absolute; top: 50%; left: 50%; width: 150vmax; height: 150vmax; background: conic-gradient(from 0deg, transparent 0%, var(--ray-color) 10%, transparent 20%, var(--ray-color) 30%, transparent 40%, var(--ray-color) 50%, transparent 60%, var(--ray-color) 70%, transparent 80%, var(--ray-color) 90%, transparent 100%); transform: translate3d(-50%, -50%, 0); animation: rotate-rays 20s linear infinite; opacity: 0; z-index: 5; transition: opacity 1s ease, background 1s ease; will-change: transform; }
         body.is-opened .light-rays { opacity: 1; }
-        .clouds-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 2; pointer-events: none; opacity: var(--cloud-opacity); transition: opacity 1s ease; }
-        .cloud { position: absolute; background: #fff; border-radius: 50px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); animation: drift linear infinite; }
+        .clouds-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 2; pointer-events: none; opacity: var(--cloud-opacity); transition: opacity 1s ease; will-change: transform; }
+        .cloud { position: absolute; background: #fff; border-radius: 50px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); animation: drift linear infinite; will-change: transform;}
         .cloud::before, .cloud::after { content: ''; position: absolute; background: #fff; border-radius: 50%; }
         .c1 { width: 150px; height: 50px; top: 15%; left: -200px; animation-duration: 40s; } .c1::before { width: 70px; height: 70px; top: -30px; left: 20px; } .c1::after { width: 50px; height: 50px; top: -20px; right: 20px; }
         .c2 { width: 200px; height: 60px; top: 60%; left: -300px; animation-duration: 55s; animation-delay: 5s; transform: scale(0.8); } .c2::before { width: 80px; height: 80px; top: -40px; left: 30px; } .c2::after { width: 60px; height: 60px; top: -30px; right: 30px; }
-        @keyframes drift { to { transform: translateX(120vw); } }
-
+        
         /* --- โซนงานวันเกิด --- */
-        .party-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; transform-style: preserve-3d; }
+        .party-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; transform-style: preserve-3d; will-change: transform, opacity; }
         body.is-opened .party-content { opacity: 1; transform: scale(1); transition-delay: 0.3s; }
 
         /* =========================================
-           ✨ อัปเกรดเค้ก 3D ให้สมจริงขึ้น ✨
+           ✨ เค้ก 3D พร้อมถาดรอง ✨
            ========================================= */
-        .cake-container { position: relative; width: 280px; height: 220px; transform-style: preserve-3d; transform: rotateX(15deg) scale(var(--cake-scale)); animation: float-cake-3d 3s ease-in-out infinite alternate; transition: all 1s ease; margin-top: -10vh; }
-        
+        .cake-container { position: relative; width: 280px; height: 220px; transform-style: preserve-3d; transform: rotateX(15deg) scale(var(--cake-scale)); animation: float-cake-3d 3s ease-in-out infinite alternate; transition: all 1s ease; margin-top: -10vh; will-change: transform;}
         .cake-board { position: absolute; top: 130px; width: 340px; height: 130px; background: repeating-linear-gradient(45deg, #d4af37, #d4af37 10px, #c5a017 10px, #c5a017 20px); border-radius: 50%; left: 50%; transform: translateX(-50%) translateZ(-70px); box-shadow: 0 20px 30px rgba(0,0,0,0.6), inset 0 -5px 15px rgba(0,0,0,0.5); z-index: 0; }
         .cake-board::before { content: ''; position: absolute; top: -8px; left: 0; width: 100%; height: 100%; border-radius: 50%; background: #fcf6ba; box-shadow: inset 0 5px 15px rgba(0,0,0,0.2); }
 
         .layer { position: absolute; display: block; border-radius: 50%; left: 50%; transform: translateX(-50%); transform-style: preserve-3d; transition: background 1s ease; }
         .layer::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 -15px 25px rgba(0,0,0,0.4), inset 0 5px 15px rgba(255,255,255,0.5); pointer-events: none; z-index: 10;}
         .layer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; filter: brightness(0.85); box-shadow: 0 15px 25px rgba(0,0,0,0.4); transition: background-color 1s ease; }
-        
         .layer-bottom { top: 120px; width: 280px; height: 100px; z-index: 1; background: var(--cake-1); } .layer-bottom::before { background-color: var(--cake-1-side); transform: translateZ(-50px); }
         .layer-middle { top: 75px; width: 220px; height: 85px; z-index: 2; background: var(--cake-2); } .layer-middle::before { background-color: var(--cake-2-side); transform: translateZ(-35px); }
         .layer-top { top: 35px; width: 160px; height: 75px; z-index: 3; background: var(--cake-3); } .layer-top::before { background-color: var(--cake-3-side); transform: translateZ(-25px); }
@@ -115,111 +119,25 @@
         .icing { position: absolute; top: 18px; left: 50%; width: 170px; height: 75px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffffff 0deg 20deg, #f2f2f2 20deg 40deg); z-index: 4; opacity: 0.95; transform: translateX(-50%) translateZ(5px); box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .icing::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background-image: radial-gradient(circle, #ff3366 3px, transparent 4px), radial-gradient(circle, #00ffcc 3px, transparent 4px), radial-gradient(circle, #ffd700 3px, transparent 4px), radial-gradient(circle, #aa00ff 3px, transparent 4px), radial-gradient(circle, #ff8c00 3px, transparent 4px); background-size: 30px 30px, 45px 25px, 25px 40px, 35px 35px, 40px 40px; background-position: 5px 5px, 15px 10px, 20px 20px, 10px 15px, 30px 5px; z-index: 5; opacity: 0.8; }
 
-        /* =========================================
-           ✨ ระบบเป่าเทียน (ปรับตำแหน่งให้ปักเค้ก & กดง่ายขึ้น) ✨
-           ========================================= */
-        .candle-container { 
-            position: absolute; 
-            /* ดันเทียนลงมาปักในเค้ก (ปรับจาก top: 0 เป็น top: 15px) */
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%) translateZ(25px); 
-            z-index: 100; 
-            display: flex; 
-            gap: 15px; 
-            transform-style: preserve-3d; 
-        }
-        .candle { 
-            position: relative; 
-            width: 10px; 
-            height: 35px; 
-            background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 5px, #fff 5px, #fff 10px); 
-            border-radius: 3px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3); 
-        }
-        /* ขยับกล่องรับสัมผัส (Hitbox) ให้ลงมาครอบเฉพาะบริเวณยอดเทียนและเปลวไฟพอดี */
-        .flame { 
-            position: absolute; 
-            top: -25px; /* ดึงกล่องลงมาให้ตรงกับไฟ */
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 50px; /* ลดความกว้างลงนิดนึงกันกดโดนเทียนข้างๆ */
-            height: 60px; /* ความสูงพอดีกับไฟ */
-            cursor: pointer; 
-            z-index: 150; 
-            background-color: rgba(255,255,255,0); /* สีโปร่งใส */
-        }
-        /* ตัวเปลวไฟจริงๆ */
-        .flame::after { 
-            content: ''; 
-            position: absolute; 
-            bottom: 35px; /* จัดตำแหน่งไฟให้อยู่เหนือเทียนนิดนึง */
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 12px; 
-            height: 18px; 
-            border-radius: 50% 50% 20% 20%; 
-            background: radial-gradient(ellipse at bottom, #ffff00 0%, #ff9900 60%, #ff3300 100%); 
-            box-shadow: 0 -5px 15px #ffcc00, 0 -10px 30px #ff6600, 0 -20px 50px #ff0000; 
-            animation: flicker 0.5s infinite alternate; 
-            transition: all 0.3s ease; 
-        }
-        .flame.blown-out { pointer-events: none; } 
-        .flame.blown-out::after { transform: translateX(-50%) scale(0); opacity: 0; box-shadow: none; animation: none; }
+        .candle-container { position: absolute; top: 20px; left: 50%; transform: translateX(-50%) translateZ(25px); z-index: 100; display: flex; gap: 15px; transform-style: preserve-3d; }
+        .candle { position: relative; width: 10px; height: 35px; background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 5px, #fff 5px, #fff 10px); border-radius: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .flame { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 50px; height: 60px; cursor: pointer; z-index: 150; background-color: rgba(255,255,255,0); }
+        .flame::after { content: ''; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); width: 12px; height: 18px; border-radius: 50% 50% 20% 20%; background: radial-gradient(ellipse at bottom, #ffff00 0%, #ff9900 60%, #ff3300 100%); box-shadow: 0 -5px 15px #ffcc00, 0 -10px 30px #ff6600, 0 -20px 50px #ff0000; animation: flicker 0.5s infinite alternate; transition: all 0.3s ease; will-change: transform;}
+        .flame.blown-out { pointer-events: none; } .flame.blown-out::after { transform: translateX(-50%) scale(0); opacity: 0; box-shadow: none; animation: none; }
 
-        /* --- ข้อความ Typewriter --- */
-        .text-container { 
-            position: absolute; 
-            top: 70%; 
-            bottom: 5vh; 
-            left: 0;
-            width: 100%;
-            overflow-y: auto; 
-            text-align: center; 
-            padding: 20px; 
-            z-index: 20; 
-            transform: translateZ(30px); 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-start; 
-            align-items: center; 
-            box-sizing: border-box; 
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
-            transition: all 0.5s ease;
-            max-width: 90%; 
-            margin: 0 auto; 
-            left: 50%;
-            transform: translateX(-50%) translateZ(30px);
-        }
-        
-        .text-container.paper-background {
-            background: #fffdf2; 
-            background-image: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,250,240,0.5)), url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.1' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0 0 0.85 0 0 0 0 0 0.8 0 0 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E");
-            border: 3px solid #e8d8c0; 
-            border-radius: 15px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
-            --text-main-color: #ff0055 !important; 
-            --text-main-stroke: transparent !important; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important; 
-        }
-
-        body.dreamy-mode .text-container.paper-background {
-             --text-main-color: #0d47a1 !important;
-        }
-        
+        /* --- ข้อความ Typewriter และกระดาษพื้นหลัง --- */
+        .text-container { position: absolute; top: 70%; bottom: 5vh; left: 0; width: 100%; overflow-y: auto; text-align: center; padding: 20px; z-index: 20; transform: translate3d(0, 0, 30px); display: flex; flex-direction: column; justify-content: flex-start; align-items: center; box-sizing: border-box; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.4) transparent; transition: all 0.5s ease; max-width: 90%; margin: 0 auto; left: 50%; transform: translate3d(-50%, 0, 30px); will-change: transform, opacity;}
+        .text-container.paper-background { background: #fffdf2; background-image: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,250,240,0.5)), url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.1' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0 0 0.85 0 0 0 0 0 0.8 0 0 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E"); border: 3px solid #e8d8c0; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); --text-main-color: #ff0055 !important; --text-main-stroke: transparent !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important; }
+        body.dreamy-mode .text-container.paper-background { --text-main-color: #0d47a1 !important; }
         .text-container::-webkit-scrollbar { width: 5px; } .text-container::-webkit-scrollbar-track { background: transparent; } .text-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 10px; }
         .hint-text { font-family: 'Mali', sans-serif; font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 600; color: var(--hint-color); text-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px rgba(255,255,255,0.8); animation: pulse-clear 1.5s infinite alternate; transition: color 1s ease, opacity 0.5s ease; margin-bottom: 10px;}
         .typewriter-text { font-family: 'Mali', sans-serif; font-size: clamp(1.2rem, 5vw, 2.2rem); line-height: 1.6; font-weight: 600; color: var(--text-main-color); -webkit-text-stroke: 1.5px var(--text-main-stroke); text-shadow: var(--text-shadow); transition: all 0.5s ease; margin-top: 5px; max-width: 100%; }
         .cursor { display: inline-block; width: 4px; height: 1.2em; background-color: var(--text-main-color); vertical-align: text-bottom; margin-left: 2px; animation: blink 0.8s infinite; opacity: 0; }
         body.typing-active .cursor { opacity: 1; }
 
-        /* --- ของตกแต่ง --- */
-        .sparkles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 15; } .sparkle { position: absolute; width: 5px; height: 5px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 20px #ffffff; animation: float-sparkle 3s ease-in-out infinite; opacity: 0; } body.is-opened .sparkle { opacity: 1; } .sp1 { top: 30%; left: 30%; animation-delay: 0s; } .sp2 { top: 70%; left: 70%; animation-delay: 0.5s; } .sp3 { top: 40%; left: 80%; animation-delay: 1s; } .sp4 { top: 80%; left: 20%; animation-delay: 1.5s; } .sp5 { top: 20%; left: 60%; animation-delay: 2s; }
-        .cartoon-placeholder { position: absolute; font-size: 4rem; top: 20%; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); animation: bounce-cartoon 2s ease-in-out infinite; z-index: 5;} .cp-left { left: 15%; animation-delay: 0s; } .cp-right { right: 15%; animation-delay: 1s; }
+        .cartoon-placeholder { position: absolute; font-size: 4rem; top: 20%; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); animation: bounce-cartoon 2s ease-in-out infinite; z-index: 5; will-change: transform;} .cp-left { left: 15%; animation-delay: 0s; } .cp-right { right: 15%; animation-delay: 1s; }
         
-        /* --- กล่องของขวัญ --- */
-        .gift-container { position: absolute; z-index: 100; cursor: pointer; animation: jiggle 2s infinite ease-in-out; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.5)); }
+        .gift-container { position: absolute; z-index: 100; cursor: pointer; animation: jiggle 2s infinite ease-in-out; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.5)); will-change: transform;}
         .gift-lid { width: 170px; height: 40px; background-color: #ff3366; border-radius: 5px; position: relative; box-shadow: 0 5px 10px rgba(0,0,0,0.3); transition: transform 0.5s ease, opacity 0.5s ease; z-index: 2; background: linear-gradient(to bottom, #ff5a82, #ff3366); }
         .gift-lid::before, .gift-lid::after { content: ''; position: absolute; width: 30px; height: 30px; border: 5px solid #ffd700; border-radius: 50%; bottom: 20px; box-shadow: 0 0 10px #ffd700; } .gift-lid::before { left: 40px; border-bottom-color: transparent; border-right-color: transparent; transform: rotate(-45deg); } .gift-lid::after { right: 40px; border-bottom-color: transparent; border-left-color: transparent; transform: rotate(45deg); }
         .lid-ribbon { position: absolute; width: 25px; height: 100%; background-color: #ffd700; left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px #ffd700; }
@@ -228,27 +146,53 @@
         .click-text { color: #fff; text-align: center; margin-top: 25px; font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; animation: pulse-clear 1s infinite alternate; transition: opacity 0.3s ease; text-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 15px #ff3366; }
         body.is-opened .gift-lid { transform: translateY(-120px) rotate(20deg) scale(1.1); opacity: 0; } body.is-opened .gift-box { transform: translateY(120px) scale(0.7); opacity: 0; } body.is-opened .click-text { animation: none; opacity: 0; visibility: hidden; } body.is-opened .gift-container { pointer-events: none; }
 
-        /* --- Elements ลอยด้วย JS --- */
-        .firework-particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; left: var(--startX); top: var(--startY); background-color: var(--color); z-index: 2; pointer-events: none; box-shadow: 0 0 8px currentColor; animation: realistic-explosion 1.8s ease-out forwards; }
-        .balloon { position: absolute; bottom: -150px; width: 45px; height: 60px; border-radius: 50%; background-color: var(--color); box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), inset 10px 10px 20px rgba(255,255,255,0.4); z-index: 5; pointer-events: none; animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; } .balloon::after { content: ''; position: absolute; bottom: -20px; left: 50%; width: 2px; height: 25px; background: rgba(255,255,255,0.6); transform: translateX(-50%); }
-        .floating-emoji { position: absolute; bottom: -100px; font-size: 2.5rem; z-index: 6; pointer-events: none; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; }
-        .confetti { position: absolute; width: 10px; height: 10px; background: #ffd700; top: 50%; left: 50%; z-index: 1000; pointer-events: none; opacity: 0; }
+        /* =========================================
+           ✨ ระบบของลอย (พื้นหลังตลอดเวลา) ✨
+           ========================================= */
+        .particle-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; overflow: hidden; }
+        .firework-particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; left: var(--startX); top: var(--startY); background-color: var(--color); z-index: 15; pointer-events: none; animation: realistic-explosion 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; will-change: transform, opacity; }
+        
+        /* Z-index 3: อยู่หลังเค้กแต่อยู่หน้าดาว */
+        .balloon { position: absolute; bottom: -150px; width: 45px; height: 60px; border-radius: 50%; background-color: var(--color); box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2), inset 5px 5px 10px rgba(255,255,255,0.4); z-index: 3; pointer-events: none; animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; will-change: transform; } .balloon::after { content: ''; position: absolute; bottom: -20px; left: 50%; width: 2px; height: 25px; background: rgba(255,255,255,0.6); transform: translateX(-50%); }
+        .floating-emoji { position: absolute; bottom: -100px; font-size: 2.5rem; z-index: 3; pointer-events: none; filter: drop-shadow(0 0 5px rgba(255,255,255,0.4)); animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; will-change: transform; }
+        .confetti { position: absolute; width: 10px; height: 10px; top: 50%; left: 50%; z-index: 15; pointer-events: none; opacity: 0; will-change: transform, opacity; }
+
+        /* =========================================
+           ✨ แสงวิบวับพื้นหลังตลอดเวลา (New!) ✨
+           ========================================= */
+        .global-sparkles { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2; pointer-events: none; overflow: hidden; }
+        .bg-sparkle { position: absolute; background: var(--sparkle-color); border-radius: 50%; animation: twinkle-anim infinite ease-in-out; will-change: opacity, transform; }
+        @keyframes twinkle-anim {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px var(--sparkle-color), 0 0 20px #ffffff; }
+        }
 
         /* --- Animations --- */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes jiggle { 0%, 100% { transform: rotate(-3deg) scale(1); } 50% { transform: rotate(3deg) scale(1.05); } }
         @keyframes pulse-clear { from { opacity: 0.8; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
         @keyframes flicker { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(0.9, 1.1) rotate(-2deg); height: 16px; } 100% { transform: translateX(-50%) scale(1.1, 0.9) rotate(2deg); } }
-        @keyframes starMove { from { background-position: 0 0, 0 0, 0 0; } to { background-position: -1000px 500px, -500px 1000px, 500px 500px; } }
-        @keyframes rotate-rays { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-        @keyframes float-sparkle { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(20px, -20px); } }
-        @keyframes bounce-cartoon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        @keyframes drift { to { transform: translate3d(120vw, 0, 0); } }
+        @keyframes starMoveFast { from { transform: translateY(0); } to { transform: translateY(100%); } }
+        @keyframes rotate-rays { from { transform: translate3d(-50%, -50%, 0) rotate(0deg); } to { transform: translate3d(-50%, -50%, 0) rotate(360deg); } }
+        @keyframes float-sparkle { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(20px, -20px, 0); } }
+        @keyframes bounce-cartoon { 0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); } 50% { transform: translate3d(0, -15px, 0) rotate(5deg); } }
         @keyframes shake-screen { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
-        @keyframes confetti-explosion { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; } }
-        @keyframes realistic-explosion { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--endX), var(--endY)) scale(0.5); opacity: 0; } }
-        @keyframes floatUp { to { transform: translateY(-120vh) scale(var(--scale)); } }
-        @keyframes sway { from { margin-left: -30px; } to { margin-left: 30px; } }
-        @keyframes float-cake-3d { 0% { transform: rotateX(15deg) translateY(0px) scale(var(--cake-scale)); } 100% { transform: rotateX(15deg) translateY(-20px) scale(var(--cake-scale)); } }
+        
+        @keyframes confetti-explosion { 0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate3d(var(--tx), var(--ty), 0) rotate(var(--rot)); opacity: 0; } }
+        @keyframes realistic-explosion { 0% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; } 100% { transform: translate3d(var(--endX), var(--endY), 0) scale(0.5); opacity: 0; } }
+        @keyframes float-cake-3d { 0% { transform: rotateX(15deg) translate3d(0, 0px, 0) scale(var(--cake-scale)); } 100% { transform: rotateX(15deg) translate3d(0, -20px, 0) scale(var(--cake-scale)); } }
+        
+        @keyframes floatUp { 
+            0% { transform: translate3d(0, 50px, 0) scale(var(--scale)); opacity: 0;} 
+            5% { opacity: 1; }
+            100% { transform: translate3d(0, -120vh, 0) scale(var(--scale)); opacity: 1;} 
+        }
+        @keyframes sway { 
+            from { margin-left: -30px; } 
+            to { margin-left: 30px; } 
+        }
+
     </style>
 </head>
 <body>
@@ -259,10 +203,7 @@
         <p>เพื่อดูการ์ด 3D ให้ลื่นไหลและสวยงามที่สุด<br>
         กรุณากดปุ่ม <span class="icon-dots">⋯</span> หรือ <span class="icon-dots">⋮</span> ที่มุมขวาบน<br>
         แล้วเลือก <b>"เปิดในเบราว์เซอร์"</b> (Open in Browser) นะครับ 🚀</p>
-        
-        <button class="btn-close-warning" onclick="document.getElementById('inAppWarning').style.display='none'">
-            ฉันเข้าใจแล้ว
-        </button>
+        <button class="btn-close-warning" onclick="document.getElementById('inAppWarning').style.display='none'">ฉันเข้าใจแล้ว</button>
     </div>
 
     <button class="theme-toggle" id="themeToggle" title="เปลี่ยนบรรยากาศ">
@@ -279,23 +220,22 @@
     </div>
     <div class="light-rays"></div>
     
+    <div class="global-sparkles" id="globalSparkles"></div>
+
     <div class="gift-container" id="giftBox">
         <div class="gift-lid"><div class="lid-ribbon"></div></div>
         <div class="gift-box"><div class="box-ribbon"></div></div>
         <div class="click-text">คลิกเพื่อเปิด! 👆</div>
     </div>
 
+    <div class="particle-wrapper" id="particleWrapper"></div>
+
     <div class="party-content">
-        <div class="sparkles-container">
-            <div class="sparkle sp1"></div><div class="sparkle sp2"></div><div class="sparkle sp3"></div><div class="sparkle sp4"></div><div class="sparkle sp5"></div>
-        </div>
-        
         <div class="cartoon-placeholder cp-left">🥳</div>
         <div class="cartoon-placeholder cp-right">🎈</div>
 
         <div class="cake-container">
             <div class="cake-board"></div> 
-            
             <div class="candle-container">
                 <div class="candle"><div class="flame" title="แตะเพื่อดับไฟ!"></div></div>
                 <div class="candle"><div class="flame" title="แตะเพื่อดับไฟ!"></div></div>
@@ -308,7 +248,7 @@
         </div>
 
         <div class="text-container" id="scrollContainer">
-            <div class="hint-text" id="hintText">👆 ลองแตะที่ไฟเพื่อเป่าเทียนสิ!</div>
+            <div class="hint-text" id="hintText">👆 ลองแตะที่ไฟเพื่อเป่าเทียนสิ!😁 </div>
             <div class="typewriter-text">
                 <span id="typedMsg"></span><span class="cursor"></span>
             </div>
@@ -316,24 +256,18 @@
     </div>
 
     <script>
-        // ==========================================
-        // 0. ระบบตรวจจับ In-App Browser
-        // ==========================================
         document.addEventListener("DOMContentLoaded", function() {
             const ua = navigator.userAgent || navigator.vendor || window.opera;
             const isInApp = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || 
                             (ua.indexOf("Line") > -1) || 
                             (ua.indexOf("Instagram") > -1) || 
                             (ua.indexOf("MicroMessenger") > -1); 
-            
-            if (isInApp) {
-                document.getElementById('inAppWarning').classList.add('show');
-            }
+            if (isInApp) document.getElementById('inAppWarning').classList.add('show');
+
+            // ✨ สร้างแสงวิบวับพื้นหลังทันทีที่โหลดหน้าเว็บ ✨
+            createGlobalSparkles();
         });
 
-        // ==========================================
-        // 1. ระบบรับข้อมูลจาก URL
-        // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
         const customText = urlParams.get('text');
         
@@ -344,9 +278,7 @@
             "และมีรอยยิ้มที่สดใสแบบนี้ตลอดไปเลยนะ 💖"
         ];
 
-        if (customText) {
-            messages = customText.split('|');
-        }
+        if (customText) messages = customText.split('|');
 
         const customImgParam = urlParams.get('img');
         let userPhotoUrls = []; 
@@ -372,10 +304,6 @@
             }
         }
 
-        // ==========================================
-        // 2. ระบบการทำงานหลักของการ์ด
-        // ==========================================
-        
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
@@ -396,17 +324,16 @@
         giftBox.addEventListener('click', function() {
             if(partyStarted) return;
             partyStarted = true;
-            
-            bgMusic.play().catch(e => console.log("กรุณาอนุญาตให้เล่นเสียงในเบราว์เซอร์"));
-            
+            bgMusic.play().catch(e => console.log("Please allow audio playback"));
             document.body.classList.add('is-opened');
             document.body.classList.add('is-shaking');
             setTimeout(() => document.body.classList.remove('is-shaking'), 500);
             
-            createConfetti();
-
-            intervals.push(setInterval(createBalloon, 2000));
-            intervals.push(setInterval(createFloatingEmoji, 1500));
+            createConfetti(60); 
+            
+            // ✨ สร้างของลอยตลอดเวลาและไม่หายไปไหน ✨
+            intervals.push(setInterval(createBalloon, 1200)); 
+            intervals.push(setInterval(createFloatingEmoji, 1000)); 
         });
 
         const flames = document.querySelectorAll('.flame');
@@ -419,7 +346,7 @@
                     this.classList.add('blown-out');
                     blownCount++;
                     
-                    createConfetti(20); 
+                    createConfetti(30); 
 
                     if (blownCount === flames.length) {
                         hintText.style.opacity = '0'; 
@@ -433,11 +360,10 @@
         });
 
         function startPartyAndTypewriter() {
-            intervals.push(setInterval(launchRealisticFirework, 1200));
-            createConfetti(100);
+            intervals.push(setInterval(launchRealisticFirework, 1000)); 
+            createConfetti(120); 
 
             document.body.classList.add('typing-active');
-            
             const scrollBox = document.getElementById('scrollContainer'); 
             scrollBox.classList.add('paper-background');
 
@@ -450,17 +376,13 @@
                     if (charIndex < messages[lineIndex].length) {
                         typedEl.innerHTML += messages[lineIndex].charAt(charIndex);
                         charIndex++;
-                        
                         scrollBox.scrollTop = scrollBox.scrollHeight;
-                        
                         setTimeout(typeWriter, 100); 
                     } else {
                         typedEl.innerHTML += "<br><br>";
                         lineIndex++;
                         charIndex = 0;
-                        
                         scrollBox.scrollTop = scrollBox.scrollHeight;
-                        
                         setTimeout(typeWriter, 800); 
                     }
                 }
@@ -468,17 +390,47 @@
             setTimeout(typeWriter, 1000); 
         }
 
+        // ==========================================
+        // ✨ ฟังก์ชันสร้างแสงวิบวับพื้นหลัง (ใหม่) ✨
+        // ==========================================
+        function createGlobalSparkles() {
+            const container = document.getElementById('globalSparkles');
+            const sparkleCount = window.innerWidth < 600 ? 30 : 70; // ปรับจำนวนตามขนาดจอ
+
+            for (let i = 0; i < sparkleCount; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('bg-sparkle');
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                
+                const size = 2 + Math.random() * 4; // ขนาดสุ่ม 2px - 6px
+                sparkle.style.width = size + 'px';
+                sparkle.style.height = size + 'px';
+                
+                const delay = Math.random() * 5; // เริ่มต้นไม่พร้อมกัน
+                const duration = 3 + Math.random() * 4; // จังหวะกระพริบต่างกัน
+                sparkle.style.animationDelay = delay + 's';
+                sparkle.style.animationDuration = duration + 's';
+                
+                container.appendChild(sparkle);
+            }
+        }
+
+        // ==========================================
+        // ✨ ฟังก์ชันลบขยะอัตโนมัติเฉพาะตัวมันเอง (แก้บัคของหาย) ✨
+        // ==========================================
+        
         function launchRealisticFirework() {
             if(isDreamy && Math.random() > 0.5) return; 
-
+            
             const startX = Math.random() * window.innerWidth + 'px';
             const startY = (Math.random() * window.innerHeight * 0.6) + 'px';
-            const colors = isDreamy 
-                ? ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ff99a8'] 
-                : ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ffffff', '#ff6b9e']; 
-                
+            const colors = isDreamy ? ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ff99a8'] : ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ffffff', '#ff6b9e']; 
             const baseColor = colors[Math.floor(Math.random() * colors.length)];
-            const particleCount = (window.innerWidth < 600) ? 40 : (isDreamy ? 50 : 80); 
+            
+            const particleCount = (window.innerWidth < 600) ? 30 : 60; 
+            const fragment = document.createDocumentFragment();
+            const particles = [];
 
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
@@ -486,43 +438,44 @@
                 particle.style.setProperty('--startX', startX);
                 particle.style.setProperty('--startY', startY);
                 particle.style.setProperty('--color', baseColor);
-                
                 const angle = Math.random() * Math.PI * 2;
                 const distance = 80 + Math.random() * 250; 
                 particle.style.setProperty('--endX', Math.cos(angle) * distance + 'px');
                 particle.style.setProperty('--endY', Math.sin(angle) * distance + 'px');
                 
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1800);
+                fragment.appendChild(particle);
+                particles.push(particle);
             }
+            
+            document.body.appendChild(fragment); 
+            
+            // ลบเฉพาะเศษพลุชุดนี้เมื่อเวลาผ่านไป
+            setTimeout(() => {
+                particles.forEach(p => p.remove());
+            }, 1900);
         }
 
         function createBalloon() {
             const balloon = document.createElement('div');
             balloon.classList.add('balloon');
-            const colors = isDreamy
-                ? ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ffe1e8', '#d4e6ff'] 
-                : ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ff6b9e', '#4facfe'];
+            const colors = isDreamy ? ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ffe1e8', '#d4e6ff'] : ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ff6b9e', '#4facfe'];
             balloon.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
             balloon.style.left = Math.random() * 90 + '%';
             
             const scale = 0.6 + Math.random() * 0.4;
-            balloon.style.transform = `scale(${scale})`;
             balloon.style.setProperty('--scale', scale);
             balloon.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
             balloon.style.setProperty('--swayDuration', (3 + Math.random() * 3) + 's');
             
             document.body.appendChild(balloon);
-            setTimeout(() => balloon.remove(), 25000);
+            
+            setTimeout(() => balloon.remove(), 26000);
         }
 
         function createFloatingEmoji() {
             const emojiEl = document.createElement('div');
             emojiEl.classList.add('floating-emoji');
-            
-            const emojis = isDreamy 
-                ? ['☁️', '🦄', '💖', '✨', '🧁']
-                : ['🥳', '🥳', '🎉', '🎁', '✨', '🎈'];
+            const emojis = isDreamy ? ['☁️', '🦄', '💖', '✨', '🧁'] : ['🥳', '🥳', '🎉', '🎁', '✨', '🎈'];
             
             if (userPhotoUrls.length > 0 && Math.random() > 0.4) { 
                 const randomImgUrl = userPhotoUrls[Math.floor(Math.random() * userPhotoUrls.length)];
@@ -531,29 +484,27 @@
             } else {
                 emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             }
-
-            emojiEl.style.left = Math.random() * 90 + '%';
             
+            emojiEl.style.left = Math.random() * 90 + '%';
             const scale = 0.5 + Math.random() * 0.5;
-            emojiEl.style.transform = `scale(${scale})`;
             emojiEl.style.setProperty('--scale', scale);
             emojiEl.style.setProperty('--duration', (12 + Math.random() * 8) + 's');
             emojiEl.style.setProperty('--swayDuration', (2 + Math.random() * 3) + 's');
             
             document.body.appendChild(emojiEl);
-            setTimeout(() => emojiEl.remove(), 20000);
+            
+            setTimeout(() => emojiEl.remove(), 21000);
         }
 
-        function createConfetti(amount = 80) {
-            const colors = isDreamy
-                ? ['#ffb6c1', '#a1c4fd', '#ffffff']
-                : ['#ff6b9e', '#4facfe', '#fad961', '#ffffff', '#00ffcc'];
-                
+        function createConfetti(amount) {
+            const colors = isDreamy ? ['#ffb6c1', '#a1c4fd', '#ffffff'] : ['#ff6b9e', '#4facfe', '#fad961', '#ffffff', '#00ffcc'];
+            const fragment = document.createDocumentFragment();
+            const confettis = [];
+            
             for (let i = 0; i < amount; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
                 const angle = Math.random() * Math.PI * 2;
                 const distance = 150 + Math.random() * 300;
                 confetti.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
@@ -561,11 +512,17 @@
                 confetti.style.setProperty('--rot', (Math.random() * 360 * 2) + 'deg');
                 confetti.style.animation = `confetti-explosion ${1 + Math.random() * 1.5}s ease-out forwards`;
                 
-                document.body.appendChild(confetti);
-                setTimeout(() => confetti.remove(), 2500);
+                fragment.appendChild(confetti);
+                confettis.push(confetti);
             }
+            
+            document.body.appendChild(fragment);
+            
+            // ลบเฉพาะกระดาษสีชุดนี้เมื่อตกเสร็จ
+            setTimeout(() => {
+                confettis.forEach(c => c.remove());
+            }, 2600);
         }
     </script>
-
 </body>
 </html>
