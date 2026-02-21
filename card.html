@@ -19,16 +19,16 @@
             --cake-3: linear-gradient(to right, #fad961, #f76b1c);
             --cake-3-side: #c75400;
             
-            --text-main-color: #ffffff;
-            --text-main-stroke: #ff0055;
-            --text-shadow: 0 4px 15px rgba(0,0,0,0.9), 0 0 20px #ff0055, 0 0 40px #ff0055;
+            /* สีข้อความเริ่มต้น (ตอนยังไม่มีฉากกระดาษ) */
+            --text-main-color: #000000;
+            --text-main-stroke: #e0005e;
+            --text-shadow: 0 4px 15px rgba(255, 255, 255, 0.9), 0 0 20px #e7e7e7, 0 0 40px #ff0055;
             --hint-color: #ffd700;
             
             --star-opacity: 1;
             --cloud-opacity: 0;
             --ray-color: rgba(255, 255, 255, 0.1);
 
-            /* ขนาดเริ่มต้นของเค้ก (PC) */
             --cake-scale: 1;
         }
 
@@ -42,41 +42,39 @@
             --cake-3: linear-gradient(to right, #fdfbfb, #ebedee);
             --cake-3-side: #dcdcdc;
             
-            --text-main-color: #d81b60; 
-            --text-main-stroke: #ffffff; 
+            --text-main-color: #1a73e8; 
+            --text-main-stroke: #0011ff; 
             --text-shadow: 0 4px 10px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.9);
-            --hint-color: #1565c0; 
+            --hint-color: #0d47a1;
             
             --star-opacity: 0;
             --cloud-opacity: 0.8;
             --ray-color: rgba(255, 255, 255, 0.4);
         }
 
-        /* 📱 จัดการหน้าจอมือถือ (ย่อส่วนประกอบต่างๆ) */
+        /* 📱 จัดการหน้าจอมือถือ */
         @media (max-width: 600px) {
-            :root {
-                --cake-scale: 0.75; /* ย่อเค้กลงเหลือ 75% */
-            }
-            .cartoon-placeholder {
-                font-size: 3rem !important; /* ย่อการ์ตูน */
-                bottom: 12% !important;
-            }
-            /* ขยับรูปเข้าใกล้เค้กมากขึ้นในมือถือ */
-            .cp-left { left: 8% !important; }
-            .cp-right { right: 8% !important; }
-            
-            .text-container {
-                margin-top: 20px !important; /* ขยับข้อความขึ้นมา */
-            }
-            .theme-toggle {
-                padding: 3px 10px !important;
-                font-size: 1.2rem !important;
-            }
+            :root { --cake-scale: 0.65; }
+            .cartoon-placeholder { top: 18% !important; bottom: auto !important; }
+            .cp-left { left: 2% !important; }
+            .cp-right { right: 2% !important; }
+            .cake-container { margin-top: -15vh !important; }
+            .text-container { top: 65% !important; bottom: 5vh !important; }
+            .theme-toggle { padding: 3px 10px !important; font-size: 1rem !important; }
         }
 
         /* --- ตั้งค่าพื้นฐาน --- */
         body { background: var(--bg-gradient); height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-family: 'Sriracha', cursive; perspective: 1000px; transition: background 1s ease; }
         body.is-shaking { animation: shake-screen 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+        /* --- ป๊อปอัปแจ้งเตือน In-App Browser --- */
+        .in-app-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); z-index: 999999; color: white; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; font-family: 'Mali', sans-serif; }
+        .in-app-warning.show { display: flex; }
+        .in-app-warning h2 { color: #ff3366; font-size: 2rem; margin-bottom: 15px; text-shadow: 0 0 15px rgba(255, 51, 102, 0.5); }
+        .in-app-warning p { font-size: 1.2rem; line-height: 1.6; }
+        .icon-dots { font-size: 1.5rem; background: #334155; padding: 2px 10px; border-radius: 8px; margin: 0 5px; display: inline-block; font-family: monospace; }
+        .btn-close-warning { margin-top: 30px; padding: 10px 20px; background: transparent; border: 2px solid #64748b; border-radius: 10px; color: #94a3b8; font-family: 'Mali'; cursor: pointer; transition: 0.3s; }
+        .btn-close-warning:hover { background: #64748b; color: white; }
 
         /* --- ปุ่มสลับโหมด --- */
         .theme-toggle { position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); border-radius: 30px; padding: 5px 15px; font-size: 1.5rem; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; }
@@ -98,53 +96,127 @@
         .party-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; transform-style: preserve-3d; }
         body.is-opened .party-content { opacity: 1; transform: scale(1); transition-delay: 0.3s; }
 
-        /* --- เค้ก 3D รองรับการย่อขนาดบนมือถือ --- */
-        .cake-container { position: relative; width: 280px; height: 220px; transform-style: preserve-3d; transform: rotateX(15deg) scale(var(--cake-scale)); animation: float-cake-3d 3s ease-in-out infinite alternate; transition: all 1s ease; }
+        /* =========================================
+           ✨ อัปเกรดเค้ก 3D ให้สมจริงขึ้น ✨
+           ========================================= */
+        .cake-container { position: relative; width: 280px; height: 220px; transform-style: preserve-3d; transform: rotateX(15deg) scale(var(--cake-scale)); animation: float-cake-3d 3s ease-in-out infinite alternate; transition: all 1s ease; margin-top: -10vh; }
+        
+        .cake-board { position: absolute; top: 130px; width: 340px; height: 130px; background: repeating-linear-gradient(45deg, #d4af37, #d4af37 10px, #c5a017 10px, #c5a017 20px); border-radius: 50%; left: 50%; transform: translateX(-50%) translateZ(-70px); box-shadow: 0 20px 30px rgba(0,0,0,0.6), inset 0 -5px 15px rgba(0,0,0,0.5); z-index: 0; }
+        .cake-board::before { content: ''; position: absolute; top: -8px; left: 0; width: 100%; height: 100%; border-radius: 50%; background: #fcf6ba; box-shadow: inset 0 5px 15px rgba(0,0,0,0.2); }
+
         .layer { position: absolute; display: block; border-radius: 50%; left: 50%; transform: translateX(-50%); transform-style: preserve-3d; transition: background 1s ease; }
-        .layer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; filter: brightness(0.8); box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: background-color 1s ease; }
+        .layer::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 -15px 25px rgba(0,0,0,0.4), inset 0 5px 15px rgba(255,255,255,0.5); pointer-events: none; z-index: 10;}
+        .layer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; filter: brightness(0.85); box-shadow: 0 15px 25px rgba(0,0,0,0.4); transition: background-color 1s ease; }
+        
         .layer-bottom { top: 120px; width: 280px; height: 100px; z-index: 1; background: var(--cake-1); } .layer-bottom::before { background-color: var(--cake-1-side); transform: translateZ(-50px); }
         .layer-middle { top: 75px; width: 220px; height: 85px; z-index: 2; background: var(--cake-2); } .layer-middle::before { background-color: var(--cake-2-side); transform: translateZ(-35px); }
         .layer-top { top: 35px; width: 160px; height: 75px; z-index: 3; background: var(--cake-3); } .layer-top::before { background-color: var(--cake-3-side); transform: translateZ(-25px); }
-        .icing { position: absolute; top: 65px; left: 50%; width: 170px; height: 75px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffffff 0deg 20deg, #f2f2f2 20deg 40deg); z-index: 4; opacity: 0.95; transform: translateX(-50%) translateZ(5px); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        
+        .icing { position: absolute; top: 18px; left: 50%; width: 170px; height: 75px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffffff 0deg 20deg, #f2f2f2 20deg 40deg); z-index: 4; opacity: 0.95; transform: translateX(-50%) translateZ(5px); box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
         .icing::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background-image: radial-gradient(circle, #ff3366 3px, transparent 4px), radial-gradient(circle, #00ffcc 3px, transparent 4px), radial-gradient(circle, #ffd700 3px, transparent 4px), radial-gradient(circle, #aa00ff 3px, transparent 4px), radial-gradient(circle, #ff8c00 3px, transparent 4px); background-size: 30px 30px, 45px 25px, 25px 40px, 35px 35px, 40px 40px; background-position: 5px 5px, 15px 10px, 20px 20px, 10px 15px, 30px 5px; z-index: 5; opacity: 0.8; }
-        
-        /* --- ระบบเป่าเทียน (ปรับให้กดง่ายขึ้นบนมือถือ) --- */
-        .candle-container { position: absolute; top: 0; left: 50%; transform: translateX(-50%) translateZ(25px); z-index: 100; display: flex; gap: 15px; transform-style: preserve-3d; }
-        .candle { position: relative; width: 10px; height: 35px; background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 5px, #fff 5px, #fff 10px); border-radius: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        
-        /* 🚨 ขยายพื้นที่รับการสัมผัส (Touch Target) ให้กว้างขึ้น 🚨 */
-        .flame { 
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%); 
-            width: 40px; height: 50px; /* พื้นที่ล่องหนกว้างๆ ไว้รับนิ้ว */
-            cursor: pointer; z-index: 150; 
+
+        /* =========================================
+           ✨ ระบบเป่าเทียน (ปรับตำแหน่งให้ปักเค้ก & กดง่ายขึ้น) ✨
+           ========================================= */
+        .candle-container { 
+            position: absolute; 
+            /* ดันเทียนลงมาปักในเค้ก (ปรับจาก top: 0 เป็น top: 15px) */
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%) translateZ(25px); 
+            z-index: 100; 
+            display: flex; 
+            gap: 15px; 
+            transform-style: preserve-3d; 
         }
+        .candle { 
+            position: relative; 
+            width: 10px; 
+            height: 35px; 
+            background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 5px, #fff 5px, #fff 10px); 
+            border-radius: 3px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); 
+        }
+        /* ขยับกล่องรับสัมผัส (Hitbox) ให้ลงมาครอบเฉพาะบริเวณยอดเทียนและเปลวไฟพอดี */
+        .flame { 
+            position: absolute; 
+            top: -25px; /* ดึงกล่องลงมาให้ตรงกับไฟ */
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 50px; /* ลดความกว้างลงนิดนึงกันกดโดนเทียนข้างๆ */
+            height: 60px; /* ความสูงพอดีกับไฟ */
+            cursor: pointer; 
+            z-index: 150; 
+            background-color: rgba(255,255,255,0); /* สีโปร่งใส */
+        }
+        /* ตัวเปลวไฟจริงๆ */
         .flame::after { 
-            /* นี่คือตัวไฟจริงๆ */
-            content: ''; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); 
-            width: 12px; height: 18px; border-radius: 50% 50% 20% 20%; 
+            content: ''; 
+            position: absolute; 
+            bottom: 35px; /* จัดตำแหน่งไฟให้อยู่เหนือเทียนนิดนึง */
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 12px; 
+            height: 18px; 
+            border-radius: 50% 50% 20% 20%; 
             background: radial-gradient(ellipse at bottom, #ffff00 0%, #ff9900 60%, #ff3300 100%); 
             box-shadow: 0 -5px 15px #ffcc00, 0 -10px 30px #ff6600, 0 -20px 50px #ff0000; 
-            animation: flicker 0.5s infinite alternate; transition: all 0.3s ease; 
+            animation: flicker 0.5s infinite alternate; 
+            transition: all 0.3s ease; 
         }
-        .flame.blown-out { pointer-events: none; } .flame.blown-out::after { transform: translateX(-50%) scale(0); opacity: 0; box-shadow: none; animation: none; }
+        .flame.blown-out { pointer-events: none; } 
+        .flame.blown-out::after { transform: translateX(-50%) scale(0); opacity: 0; box-shadow: none; animation: none; }
 
         /* --- ข้อความ Typewriter --- */
-        .text-container { text-align: center; margin-top: 50px; padding: 0 15px; z-index: 20; transform: translateZ(30px); min-height: 120px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; box-sizing: border-box; }
+        .text-container { 
+            position: absolute; 
+            top: 70%; 
+            bottom: 5vh; 
+            left: 0;
+            width: 100%;
+            overflow-y: auto; 
+            text-align: center; 
+            padding: 20px; 
+            z-index: 20; 
+            transform: translateZ(30px); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; 
+            align-items: center; 
+            box-sizing: border-box; 
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+            transition: all 0.5s ease;
+            max-width: 90%; 
+            margin: 0 auto; 
+            left: 50%;
+            transform: translateX(-50%) translateZ(30px);
+        }
         
+        .text-container.paper-background {
+            background: #fffdf2; 
+            background-image: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,250,240,0.5)), url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.1' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0 0 0.85 0 0 0 0 0 0.8 0 0 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E");
+            border: 3px solid #e8d8c0; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
+            --text-main-color: #ff0055 !important; 
+            --text-main-stroke: transparent !important; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important; 
+        }
+
+        body.dreamy-mode .text-container.paper-background {
+             --text-main-color: #0d47a1 !important;
+        }
+        
+        .text-container::-webkit-scrollbar { width: 5px; } .text-container::-webkit-scrollbar-track { background: transparent; } .text-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 10px; }
         .hint-text { font-family: 'Mali', sans-serif; font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 600; color: var(--hint-color); text-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px rgba(255,255,255,0.8); animation: pulse-clear 1.5s infinite alternate; transition: color 1s ease, opacity 0.5s ease; margin-bottom: 10px;}
-        
-        .typewriter-text { font-family: 'Mali', sans-serif; font-size: clamp(1.2rem, 5vw, 2.2rem); line-height: 1.6; font-weight: 600; color: var(--text-main-color); -webkit-text-stroke: 1.5px var(--text-main-stroke); text-shadow: var(--text-shadow); transition: all 1s ease; margin-top: 5px; max-width: 90%; }
-        
+        .typewriter-text { font-family: 'Mali', sans-serif; font-size: clamp(1.2rem, 5vw, 2.2rem); line-height: 1.6; font-weight: 600; color: var(--text-main-color); -webkit-text-stroke: 1.5px var(--text-main-stroke); text-shadow: var(--text-shadow); transition: all 0.5s ease; margin-top: 5px; max-width: 100%; }
         .cursor { display: inline-block; width: 4px; height: 1.2em; background-color: var(--text-main-color); vertical-align: text-bottom; margin-left: 2px; animation: blink 0.8s infinite; opacity: 0; }
         body.typing-active .cursor { opacity: 1; }
 
         /* --- ของตกแต่ง --- */
         .sparkles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 15; } .sparkle { position: absolute; width: 5px; height: 5px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 20px #ffffff; animation: float-sparkle 3s ease-in-out infinite; opacity: 0; } body.is-opened .sparkle { opacity: 1; } .sp1 { top: 30%; left: 30%; animation-delay: 0s; } .sp2 { top: 70%; left: 70%; animation-delay: 0.5s; } .sp3 { top: 40%; left: 80%; animation-delay: 1s; } .sp4 { top: 80%; left: 20%; animation-delay: 1.5s; } .sp5 { top: 20%; left: 60%; animation-delay: 2s; }
-        
-        .cartoon-placeholder { position: absolute; font-size: 4rem; bottom: 15%; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); animation: bounce-cartoon 2s ease-in-out infinite; z-index: 5;} 
-        /* ขยับรูปเข้าใกล้เค้กมากขึ้นใน PC */
-        .cp-left { left: 18%; animation-delay: 0s; } 
-        .cp-right { right: 18%; animation-delay: 1s; }
+        .cartoon-placeholder { position: absolute; font-size: 4rem; top: 20%; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); animation: bounce-cartoon 2s ease-in-out infinite; z-index: 5;} .cp-left { left: 15%; animation-delay: 0s; } .cp-right { right: 15%; animation-delay: 1s; }
         
         /* --- กล่องของขวัญ --- */
         .gift-container { position: absolute; z-index: 100; cursor: pointer; animation: jiggle 2s infinite ease-in-out; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.5)); }
@@ -158,8 +230,8 @@
 
         /* --- Elements ลอยด้วย JS --- */
         .firework-particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; left: var(--startX); top: var(--startY); background-color: var(--color); z-index: 2; pointer-events: none; box-shadow: 0 0 8px currentColor; animation: realistic-explosion 1.8s ease-out forwards; }
-        .balloon { position: absolute; bottom: -150px; width: 60px; height: 80px; border-radius: 50%; background-color: var(--color); box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), inset 10px 10px 20px rgba(255,255,255,0.4); z-index: 5; pointer-events: none; animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; } .balloon::after { content: ''; position: absolute; bottom: -20px; left: 50%; width: 2px; height: 25px; background: rgba(255,255,255,0.6); transform: translateX(-50%); }
-        .floating-emoji { position: absolute; bottom: -100px; font-size: 3.5rem; z-index: 6; pointer-events: none; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; }
+        .balloon { position: absolute; bottom: -150px; width: 45px; height: 60px; border-radius: 50%; background-color: var(--color); box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), inset 10px 10px 20px rgba(255,255,255,0.4); z-index: 5; pointer-events: none; animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; } .balloon::after { content: ''; position: absolute; bottom: -20px; left: 50%; width: 2px; height: 25px; background: rgba(255,255,255,0.6); transform: translateX(-50%); }
+        .floating-emoji { position: absolute; bottom: -100px; font-size: 2.5rem; z-index: 6; pointer-events: none; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; }
         .confetti { position: absolute; width: 10px; height: 10px; background: #ffd700; top: 50%; left: 50%; z-index: 1000; pointer-events: none; opacity: 0; }
 
         /* --- Animations --- */
@@ -176,11 +248,22 @@
         @keyframes realistic-explosion { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--endX), var(--endY)) scale(0.5); opacity: 0; } }
         @keyframes floatUp { to { transform: translateY(-120vh) scale(var(--scale)); } }
         @keyframes sway { from { margin-left: -30px; } to { margin-left: 30px; } }
-        /* รองรับตัวแปรการย่อส่วนของเค้ก */
         @keyframes float-cake-3d { 0% { transform: rotateX(15deg) translateY(0px) scale(var(--cake-scale)); } 100% { transform: rotateX(15deg) translateY(-20px) scale(var(--cake-scale)); } }
     </style>
 </head>
 <body>
+
+    <div class="in-app-warning" id="inAppWarning">
+        <h2>⚠️ แจ้งเตือน!</h2>
+        <p>ภาพอาจจะกระตุกเพราะคุณเปิดผ่านแอปแชท</p>
+        <p>เพื่อดูการ์ด 3D ให้ลื่นไหลและสวยงามที่สุด<br>
+        กรุณากดปุ่ม <span class="icon-dots">⋯</span> หรือ <span class="icon-dots">⋮</span> ที่มุมขวาบน<br>
+        แล้วเลือก <b>"เปิดในเบราว์เซอร์"</b> (Open in Browser) นะครับ 🚀</p>
+        
+        <button class="btn-close-warning" onclick="document.getElementById('inAppWarning').style.display='none'">
+            ฉันเข้าใจแล้ว
+        </button>
+    </div>
 
     <button class="theme-toggle" id="themeToggle" title="เปลี่ยนบรรยากาศ">
         <span id="themeIcon">🌙</span> <span id="themeText">Night</span>
@@ -206,10 +289,13 @@
         <div class="sparkles-container">
             <div class="sparkle sp1"></div><div class="sparkle sp2"></div><div class="sparkle sp3"></div><div class="sparkle sp4"></div><div class="sparkle sp5"></div>
         </div>
+        
         <div class="cartoon-placeholder cp-left">🥳</div>
         <div class="cartoon-placeholder cp-right">🎈</div>
 
         <div class="cake-container">
+            <div class="cake-board"></div> 
+            
             <div class="candle-container">
                 <div class="candle"><div class="flame" title="แตะเพื่อดับไฟ!"></div></div>
                 <div class="candle"><div class="flame" title="แตะเพื่อดับไฟ!"></div></div>
@@ -221,8 +307,8 @@
             <div class="layer layer-bottom"></div>
         </div>
 
-        <div class="text-container">
-            <div class="hint-text" id="hintText">👆 แตะที่ไฟเพื่อเป่าเทียนอธิษฐานสิ!</div>
+        <div class="text-container" id="scrollContainer">
+            <div class="hint-text" id="hintText">👆 ลองแตะที่ไฟเพื่อเป่าเทียนสิ!</div>
             <div class="typewriter-text">
                 <span id="typedMsg"></span><span class="cursor"></span>
             </div>
@@ -231,14 +317,26 @@
 
     <script>
         // ==========================================
-        // 1. ระบบรับข้อมูลจาก URL (URL Parameters)
+        // 0. ระบบตรวจจับ In-App Browser
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", function() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            const isInApp = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || 
+                            (ua.indexOf("Line") > -1) || 
+                            (ua.indexOf("Instagram") > -1) || 
+                            (ua.indexOf("MicroMessenger") > -1); 
+            
+            if (isInApp) {
+                document.getElementById('inAppWarning').classList.add('show');
+            }
+        });
+
+        // ==========================================
+        // 1. ระบบรับข้อมูลจาก URL
         // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
-        
-        // --- ส่วนจัดการข้อความ ---
         const customText = urlParams.get('text');
         
-        // ข้อความเริ่มต้น (กรณีไม่มีการส่ง URL Parameter มา)
         let messages = [
             "สุขสันต์วันเกิดนะครับ! 🎂✨",
             "ขอให้ปีนี้เป็นปีที่ใจดีกับคุณมากๆ",
@@ -247,30 +345,37 @@
         ];
 
         if (customText) {
-            // ถ้า URL มีคำว่า ?text=... ให้แยกข้อความด้วยเครื่องหมาย | เป็นแต่ละบรรทัด
             messages = customText.split('|');
         }
 
-        // --- ส่วนจัดการรูปภาพ ---
-        const customImg = urlParams.get('img');
-        if (customImg) {
-            // ถอดรหัส URL (เผื่อมีอักขระพิเศษ)
-            const decodedImgUrl = decodeURIComponent(customImg);
+        const customImgParam = urlParams.get('img');
+        let userPhotoUrls = []; 
+
+        if (customImgParam) {
+            const decodedParam = decodeURIComponent(customImgParam);
+            userPhotoUrls = decodedParam.split(',').filter(url => url.trim() !== '');
             
-            const placeholders = document.querySelectorAll('.cartoon-placeholder');
-            placeholders.forEach(el => {
-                // แทนที่ Emoji ด้วยแท็กรูปภาพ <img> 
-                // ปรับขอบเป็น 4 เหลี่ยม (ใส่ความมน 8px เพื่อความสวยงาม) และใส่เงา
-                el.innerHTML = `<img src="${decodedImgUrl}" style="width: 150px; height: 150px; border-radius: 8px; object-fit: cover; border: 5px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.5);" alt="Birthday Photo">`;
-                el.style.filter = 'none'; // เอาเงาเรืองแสงของเดิมออก
-            });
+            if (userPhotoUrls.length > 0) {
+                const placeholders = document.querySelectorAll('.cartoon-placeholder');
+                placeholders.forEach((el, index) => {
+                    const imgUrl = userPhotoUrls[index % userPhotoUrls.length];
+                    el.innerHTML = `<img src="${imgUrl}" class="user-photo" alt="Birthday Photo">`;
+                    el.style.filter = 'none'; 
+                });
+                
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    .user-photo { width: 150px; height: 150px; border-radius: 8px; object-fit: cover; border: 5px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
+                    @media (max-width: 600px) { .user-photo { width: 100px !important; height: 100px !important; border-width: 3px !important; } }
+                `;
+                document.head.appendChild(style);
+            }
         }
 
         // ==========================================
-        // 2. ระบบการทำงานหลักของการ์ด (เปิดกล่อง, เป่าเทียน, เอฟเฟกต์)
+        // 2. ระบบการทำงานหลักของการ์ด
         // ==========================================
         
-        // --- ระบบ Theme Toggle ---
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
@@ -283,7 +388,6 @@
             themeText.innerText = isDreamy ? 'Dreamy' : 'Night';
         });
 
-        // --- ระบบเปิดกล่อง และเล่นเพลง ---
         const giftBox = document.getElementById('giftBox');
         const bgMusic = document.getElementById('bgMusic');
         let partyStarted = false;
@@ -305,7 +409,6 @@
             intervals.push(setInterval(createFloatingEmoji, 1500));
         });
 
-        // --- ระบบเป่าเทียน (จิ้มง่ายขึ้นบนมือถือ) ---
         const flames = document.querySelectorAll('.flame');
         const hintText = document.getElementById('hintText');
         let blownCount = 0;
@@ -329,26 +432,35 @@
             });
         });
 
-        // --- เซอร์ไพรส์ชุดใหญ่ & Typewriter ---
         function startPartyAndTypewriter() {
             intervals.push(setInterval(launchRealisticFirework, 1200));
             createConfetti(100);
 
             document.body.classList.add('typing-active');
+            
+            const scrollBox = document.getElementById('scrollContainer'); 
+            scrollBox.classList.add('paper-background');
+
             let lineIndex = 0;
             let charIndex = 0;
             const typedEl = document.getElementById('typedMsg');
-
+            
             function typeWriter() {
                 if (lineIndex < messages.length) {
                     if (charIndex < messages[lineIndex].length) {
                         typedEl.innerHTML += messages[lineIndex].charAt(charIndex);
                         charIndex++;
+                        
+                        scrollBox.scrollTop = scrollBox.scrollHeight;
+                        
                         setTimeout(typeWriter, 100); 
                     } else {
                         typedEl.innerHTML += "<br><br>";
                         lineIndex++;
                         charIndex = 0;
+                        
+                        scrollBox.scrollTop = scrollBox.scrollHeight;
+                        
                         setTimeout(typeWriter, 800); 
                     }
                 }
@@ -356,7 +468,6 @@
             setTimeout(typeWriter, 1000); 
         }
 
-        // --- ฟังก์ชัน Visual Effects ---
         function launchRealisticFirework() {
             if(isDreamy && Math.random() > 0.5) return; 
 
@@ -395,7 +506,7 @@
             balloon.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
             balloon.style.left = Math.random() * 90 + '%';
             
-            const scale = 0.8 + Math.random() * 0.5;
+            const scale = 0.6 + Math.random() * 0.4;
             balloon.style.transform = `scale(${scale})`;
             balloon.style.setProperty('--scale', scale);
             balloon.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
@@ -413,10 +524,9 @@
                 ? ['☁️', '🦄', '💖', '✨', '🧁']
                 : ['🥳', '🥳', '🎉', '🎁', '✨', '🎈'];
             
-            const customImg = urlParams.get('img');
-            if (customImg && Math.random() > 0.5) { 
-                // ขยายขนาดรูปลอยๆ ด้านหลังเป็น 90px (จากเดิม 50px)
-                emojiEl.innerHTML = `<img src="${decodeURIComponent(customImg)}" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">`;
+            if (userPhotoUrls.length > 0 && Math.random() > 0.4) { 
+                const randomImgUrl = userPhotoUrls[Math.floor(Math.random() * userPhotoUrls.length)];
+                emojiEl.innerHTML = `<img src="${randomImgUrl}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">`;
                 emojiEl.style.filter = 'none';
             } else {
                 emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
@@ -424,7 +534,7 @@
 
             emojiEl.style.left = Math.random() * 90 + '%';
             
-            const scale = 0.6 + Math.random() * 0.6;
+            const scale = 0.5 + Math.random() * 0.5;
             emojiEl.style.transform = `scale(${scale})`;
             emojiEl.style.setProperty('--scale', scale);
             emojiEl.style.setProperty('--duration', (12 + Math.random() * 8) + 's');
