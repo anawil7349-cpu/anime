@@ -164,7 +164,6 @@
         }
         
         .upload-status { font-size: 0.9rem; margin-top: 8px; font-weight: 700; min-height: 20px; display: flex; justify-content: center; align-items: center; gap: 5px; text-align: center;}
-        .hint-text-limit { font-size: 0.85rem; color: var(--success-color); margin-top: 6px; display: flex; justify-content: flex-end; font-weight: 600; gap: 5px; align-items: center;}
         
         .btn { 
             width: 100%; padding: 16px; 
@@ -204,6 +203,13 @@
             box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4); text-decoration: none; 
         }
         .btn-preview:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5);}
+
+        .btn-outline {
+            background: transparent; color: var(--text-muted); border: 2px solid #cbd5e1; margin-top: 15px; box-shadow: none;
+        }
+        .btn-outline:hover {
+            border-color: var(--text-main); color: var(--text-main); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
 
         #paymentSection, #resultSection { 
             display: none; 
@@ -346,12 +352,12 @@
             <div class="form-group">
                 <label for="msgInput"><i class="fa-solid fa-pen-nib"></i> คำอวยพรสุดพิเศษ</label>
                 <div class="input-wrapper">
-                    <textarea id="msgInput" placeholder="ใส่คำอวยพรตรงนี้ เช่น สุขสันต์วันเกิดนะ!ขอให้มีความสุขมากๆ 💖&#10;"></textarea>
+                    <textarea id="msgInput" placeholder="ใส่คำอวยพรตรงนี้ 👇&#10;เช่น สุขสันต์วันเกิดนะ  ขอให้มีความสุขมากๆ 💖&#10;"></textarea>
                 </div>
             </div>
             
             <div class="form-group">
-                <label><i class="fa-solid fa-image"></i> ใส่รูปภาพ (สูงสุด 2 รูป)</label>
+                <label><i class="fa-solid fa-image"></i> ใส่รูปภาพเจ้าของวันเกิด (สูงสุด 2 รูป)</label>
                 
                 <div class="file-upload-wrapper" style="margin-bottom: 12px;">
                     <i class="fa-regular fa-image"></i>
@@ -372,7 +378,7 @@
                 <input type="hidden" id="imgInputUrl2"> 
             </div>
             
-            <button class="btn btn-primary" id="generateBtn">
+            <button class="btn btn-primary" id="generateBtn" disabled>
                 <i class="fa-solid fa-wand-magic-sparkles"></i> สร้างการ์ดของขวัญ
             </button>
         </div>
@@ -392,7 +398,7 @@
                 <div class="payment-methods">
                     <div class="payment-method-item">
                         <div class="method-info">
-                            <img src="https://i.ibb.co/V0gGSjv2/prompt-pay-logo.png" alt="PromptPay Logo" class="method-logo">
+                            <img src="https://i.ibb.co/xv1c6WL/unnamed.png" alt="PromptPay Logo" class="method-logo">
                             <div class="method-details">
                                 <span class="method-name" style="color: #1e293b;">พร้อมเพย์ (PromptPay)</span>
                                 <span class="method-number" id="ppNumberDisplay">081-521-6003</span>
@@ -414,10 +420,14 @@
             <div class="slip-upload-box" id="slipBoxUI">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 <p>แนบสลิปโอนเงินที่นี่</p>
-                <span>AI จะตรวจสอบความถูกต้องอัตโนมัติ ⚡</span>
+                <span>เพื่อรับลิงก์การ์ด</span>
                 <input type="file" id="slipUpload" accept="image/jpeg, image/png">
             </div>
             <div class="slip-status" id="slipStatus"></div>
+            
+            <button class="btn btn-outline" id="backToFormBtn">
+                <i class="fa-solid fa-arrow-left"></i> ย้อนกลับไปแก้ไขข้อมูล
+            </button>
         </div>
 
         <div id="resultSection">
@@ -435,6 +445,10 @@
             <a href="#" target="_blank" class="btn btn-preview" id="testBtn">
                 <i class="fa-solid fa-play"></i> เปิดดูการ์ดของคุณ
             </a>
+
+            <button class="btn btn-outline" id="homeBtn">
+                <i class="fa-solid fa-house"></i> กลับหน้าแรก (สร้างใบใหม่)
+            </button>
         </div>
     </div>
 
@@ -450,7 +464,7 @@
         const SLIPOK_BRANCH_ID = "61190"; 
         
         const EXPECTED_AMOUNT = 50.00; 
-        const RECEIVER_PP_LAST4 = "6003";  // ตรวจสอบแค่พร้อมเพย์
+        const RECEIVER_PP_LAST4 = "6003";  
 
         let generatedUrl = ""; 
         let uploadingCount = 0; 
@@ -464,6 +478,22 @@
         const finalLinkBox = document.getElementById('finalLink');
         const testBtn = document.getElementById('testBtn');
         const msgInput = document.getElementById('msgInput'); 
+        
+        const backToFormBtn = document.getElementById('backToFormBtn');
+        const homeBtn = document.getElementById('homeBtn');
+
+        // ฟังก์ชันตรวจสอบความถูกต้องของฟอร์ม (เพื่อเปิด/ปิดปุ่ม)
+        function checkFormValidity() {
+            const msg = msgInput.value.trim();
+            const url1 = document.getElementById('imgInputUrl1').value;
+            
+            // เงื่อนไข: ต้องมีข้อความ และ ต้องมีรูปภาพที่ 1 อัปโหลดเสร็จแล้ว
+            if (msg !== "" && url1 !== "" && uploadingCount === 0) {
+                generateBtn.disabled = false;
+            } else {
+                generateBtn.disabled = true;
+            }
+        }
 
         function downloadBackupLink(url) {
             const textContent = `🎉 ขอบคุณที่อุดหนุน! 🎉\n\nนี่คือลิงก์การ์ดวันเกิด 3D ของคุณ (เก็บไฟล์นี้ไว้เผื่อลืมลิงก์นะครับ):\n\n👉 ${url} 👈\n\nคัดลอกลิงก์นี้แล้วส่งให้คนพิเศษได้เลยครับ! 💖`;
@@ -524,6 +554,7 @@
                 this.value = newText;
                 this.setSelectionRange(cursorPosition + diff, cursorPosition + diff); 
             }
+            checkFormValidity(); // เช็คความถูกต้องทุกครั้งที่พิมพ์
         });
 
         // --- ระบบอัปโหลดรูปลูกค้าเข้า ImgBB ---
@@ -579,10 +610,8 @@
                     hiddenUrlEl.value = "";
                 } finally {
                     uploadingCount--;
-                    if (uploadingCount === 0) {
-                        generateBtn.disabled = false;
-                        generateBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> สร้างการ์ดของขวัญ`;
-                    }
+                    generateBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> สร้างการ์ดของขวัญ`;
+                    checkFormValidity(); // เช็คความถูกต้องหลังอัปโหลดเสร็จ
                 }
             });
         }
@@ -596,11 +625,7 @@
             const url1 = document.getElementById('imgInputUrl1').value;
             const url2 = document.getElementById('imgInputUrl2').value;
             
-            if(!msgRaw) { 
-                alert("กรุณากรอกข้อความอวยพรก่อนครับ!"); 
-                document.getElementById('msgInput').focus();
-                return; 
-            }
+            if(!msgRaw || !url1) return; // กันเหนียวไว้อีกชั้น
 
             generateBtn.disabled = true;
             generateBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> กำลังเตรียมการ์ด...`;
@@ -696,7 +721,6 @@
                     const receiverInfoStr = JSON.stringify(data.data.receiver || {}); 
                     const isMatchPP = receiverInfoStr.includes(RECEIVER_PP_LAST4);
 
-                    // เช็คแค่พร้อมเพย์อย่างเดียวแล้ว
                     if (!isMatchPP) {
                         throw new Error(`บัญชีผู้รับไม่ถูกต้อง! (กรุณาโอนผ่านพร้อมเพย์เข้าเบอร์ลงท้าย ${RECEIVER_PP_LAST4})`);
                     }
@@ -764,6 +788,23 @@
                 }, 2000);
             });
         });
+
+        // ✨ คืนสถานะปุ่มกลับมาเป็นปกติ เมื่อกดย้อนกลับ ✨
+        backToFormBtn.addEventListener('click', () => {
+            paymentSection.style.display = 'none';
+            formSection.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // คืนค่าข้อความปุ่ม
+            generateBtn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> สร้างการ์ดของขวัญ`;
+            // เช็คความครบถ้วนอีกครั้ง ถ้าลูกค้าลบข้อมูลออกปุ่มต้องกดไม่ได้
+            checkFormValidity();
+        });
+
+        homeBtn.addEventListener('click', () => {
+            window.location.reload(); 
+        });
+
     </script>
 </body>
 </html>
