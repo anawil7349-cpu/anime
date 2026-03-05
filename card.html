@@ -10,137 +10,171 @@
            --- ตัวแปรสีและขนาด (Themes & Responsive) ---
            ========================================= */
         :root {
-            --bg-gradient: radial-gradient(ellipse at bottom, #1a2a40 0%, #090a0f 100%);
-            --cake-1: #ff4d85; --cake-1-side: #e61454;
-            --cake-2: #21ccff; --cake-2-side: #0099cc;
-            --cake-3: #ffc107; --cake-3-side: #d39e00;
-            --text-main-color: #000000; --text-main-stroke: #e0005e;
-            --text-shadow: 0 4px 15px rgba(255, 255, 255, 0.9), 0 0 20px #e7e7e7, 0 0 40px #ff0055;
+            /* 🌌 Night Mode (Default) */
+            --bg-gradient: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            --cake-1: linear-gradient(to right, #ff6b9e, #ff3377);
+            --cake-1-side: #d12660;
+            --cake-2: linear-gradient(to right, #4facfe, #00f2fe);
+            --cake-2-side: #008bac;
+            --cake-3: linear-gradient(to right, #fad961, #f76b1c);
+            --cake-3-side: #c75400;
+            
+            --text-main-color: #ffffff;
+            --text-main-stroke: #ff0055;
+            --text-shadow: 0 4px 15px rgba(0,0,0,0.9), 0 0 20px #ff0055, 0 0 40px #ff0055;
             --hint-color: #ffd700;
-            --star-opacity: 1; --cloud-opacity: 0; --ray-color: rgba(255, 255, 255, 0.08);
+            
+            --star-opacity: 1;
+            --cloud-opacity: 0;
+            --ray-color: rgba(255, 255, 255, 0.1);
+
+            /* ขนาดเริ่มต้นของเค้ก (PC) */
             --cake-scale: 1;
         }
 
         body.dreamy-mode {
+            /* ☁️ Dreamy Mode (Pastel/Daylight) */
             --bg-gradient: linear-gradient(to bottom, #a1c4fd 0%, #c2e9fb 100%);
-            --cake-1: #ffb6c1; --cake-1-side: #ff8da1;
-            --cake-2: #a1c4fd; --cake-2-side: #7ba8f5;
-            --cake-3: #fdfbfb; --cake-3-side: #e0e0e0;
-            --text-main-color: #1a73e8; --text-main-stroke: #0011ff; 
+            --cake-1: linear-gradient(to right, #ffb6c1, #ffc0cb);
+            --cake-1-side: #ff99a8;
+            --cake-2: linear-gradient(to right, #a1c4fd, #c2e9fb);
+            --cake-2-side: #8cb5f2;
+            --cake-3: linear-gradient(to right, #fdfbfb, #ebedee);
+            --cake-3-side: #dcdcdc;
+            
+            --text-main-color: #d81b60; 
+            --text-main-stroke: #ffffff; 
             --text-shadow: 0 4px 10px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.9);
-            --hint-color: #0d47a1;
-            --star-opacity: 0; --cloud-opacity: 0.8; --ray-color: rgba(255, 255, 255, 0.4);
+            --hint-color: #1565c0; 
+            
+            --star-opacity: 0;
+            --cloud-opacity: 0.8;
+            --ray-color: rgba(255, 255, 255, 0.4);
         }
 
+        /* 📱 จัดการหน้าจอมือถือ (ย่อส่วนประกอบต่างๆ) */
         @media (max-width: 600px) {
-            :root { --cake-scale: 0.65; }
-            .cartoon-placeholder { top: 18% !important; bottom: auto !important; }
+            :root {
+                --cake-scale: 0.75; /* ย่อเค้กลงเหลือ 75% */
+            }
+            .cartoon-placeholder {
+                font-size: 3rem !important; /* ย่อการ์ตูน */
+                bottom: 12% !important;
+            }
             .cp-left { left: 2% !important; }
             .cp-right { right: 2% !important; }
-            .cake-container { margin-top: -15vh !important; }
-            .text-container { top: 61% !important; bottom: 5vh !important; }
-            .theme-toggle { padding: 3px 10px !important; font-size: 1rem !important; }
-            
-            .layer::before { box-shadow: inset 10px 0 10px rgba(255,255,255,0.2), inset -10px 0 15px rgba(0,0,0,0.3) !important; }
-            .layer::after { display: none !important; } 
-            .cake-board { box-shadow: 0 10px 10px rgba(0,0,0,0.4) !important; }
-            .cake-board::before { filter: none !important; box-shadow: none !important; }
-            .icing { filter: none !important; box-shadow: none !important; }
-            .icing::after { display: none !important; } 
-            .icing::before { mix-blend-mode: normal !important; }
-            .text-container.paper-background { box-shadow: 0 5px 10px rgba(0,0,0,0.3) !important; }
+            .text-container {
+                margin-top: 20px !important; /* ขยับข้อความขึ้นมา */
+            }
+            .theme-toggle {
+                padding: 3px 10px !important;
+                font-size: 1.2rem !important;
+            }
         }
 
+        /* --- ตั้งค่าพื้นฐาน --- */
         body { background: var(--bg-gradient); height: 100vh; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; font-family: 'Sriracha', cursive; perspective: 1000px; transition: background 1s ease; }
-        body.is-shaking { animation: shake-screen 0.8s cubic-bezier(.36,.07,.19,.97) both; }
+        body.is-shaking { animation: shake-screen 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
-        .in-app-warning { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 999999; color: white; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; font-family: 'Mali', sans-serif; }
-        .in-app-warning.show { display: flex; }
-        .in-app-warning h2 { color: #ff3366; font-size: 2rem; margin-bottom: 15px; }
-        .in-app-warning p { font-size: 1.2rem; line-height: 1.6; }
-        .icon-dots { font-size: 1.5rem; background: #334155; padding: 2px 10px; border-radius: 8px; margin: 0 5px; display: inline-block; font-family: monospace; }
-        .btn-close-warning { margin-top: 30px; padding: 10px 20px; background: transparent; border: 2px solid #64748b; border-radius: 10px; color: #94a3b8; font-family: 'Mali'; cursor: pointer; transition: 0.3s; }
-
-        .theme-toggle { position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); border-radius: 30px; padding: 5px 15px; font-size: 1.5rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; }
+        /* --- ปุ่มสลับโหมด --- */
+        .theme-toggle { position: absolute; top: 15px; right: 15px; z-index: 1000; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); border-radius: 30px; padding: 5px 15px; font-size: 1.5rem; cursor: pointer; backdrop-filter: blur(5px); transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; }
+        .theme-toggle:hover { background: rgba(255,255,255,0.4); transform: scale(1.05); }
         .theme-toggle span { font-family: 'Mali', sans-serif; font-size: 1rem; color: #fff; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
-        .stars { position: absolute; top: -100%; left: -100%; width: 300%; height: 300%; pointer-events: none; opacity: var(--star-opacity); transition: opacity 1s ease; background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px); background-size: 550px 550px, 350px 350px, 250px 250px; animation: starMoveFast 200s linear infinite; z-index: 1; will-change: transform; transform: translateZ(0); }
-        .light-rays { position: absolute; top: 50%; left: 50%; width: 150vmax; height: 150vmax; background: conic-gradient(from 0deg, transparent 0%, var(--ray-color) 10%, transparent 20%, var(--ray-color) 30%, transparent 40%, var(--ray-color) 50%, transparent 60%, var(--ray-color) 70%, transparent 80%, var(--ray-color) 90%, transparent 100%); transform: translate3d(-50%, -50%, 0); animation: rotate-rays 30s linear infinite; opacity: 0; z-index: 5; transition: opacity 1s ease, background 1s ease; will-change: transform; }
+        /* --- เอฟเฟกต์ฉากหลัง --- */
+        .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: var(--star-opacity); transition: opacity 1s ease; background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px); background-size: 550px 550px, 350px 350px, 250px 250px; animation: starMove 200s linear infinite; z-index: 1; }
+        .light-rays { position: absolute; top: 50%; left: 50%; width: 150vmax; height: 150vmax; background: conic-gradient(from 0deg, transparent 0%, var(--ray-color) 10%, transparent 20%, var(--ray-color) 30%, transparent 40%, var(--ray-color) 50%, transparent 60%, var(--ray-color) 70%, transparent 80%, var(--ray-color) 90%, transparent 100%); transform: translate(-50%, -50%); animation: rotate-rays 20s linear infinite; opacity: 0; z-index: 5; transition: opacity 1s ease, background 1s ease; }
         body.is-opened .light-rays { opacity: 1; }
-        .clouds-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 2; pointer-events: none; opacity: var(--cloud-opacity); transition: opacity 1s ease; will-change: transform; transform: translateZ(0); }
-        .cloud { position: absolute; background: #fff; border-radius: 50px; animation: drift linear infinite; will-change: transform;}
+        .clouds-container { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 2; pointer-events: none; opacity: var(--cloud-opacity); transition: opacity 1s ease; }
+        .cloud { position: absolute; background: #fff; border-radius: 50px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); animation: drift linear infinite; }
         .cloud::before, .cloud::after { content: ''; position: absolute; background: #fff; border-radius: 50%; }
-        .c1 { width: 150px; height: 50px; top: 15%; left: -200px; animation-duration: 60s; } .c1::before { width: 70px; height: 70px; top: -30px; left: 20px; } .c1::after { width: 50px; height: 50px; top: -20px; right: 20px; }
-        .c2 { width: 200px; height: 60px; top: 60%; left: -300px; animation-duration: 80s; animation-delay: 5s; transform: scale(0.8); } .c2::before { width: 80px; height: 80px; top: -40px; left: 30px; } .c2::after { width: 60px; height: 60px; top: -30px; right: 30px; }
+        .c1 { width: 150px; height: 50px; top: 15%; left: -200px; animation-duration: 40s; } .c1::before { width: 70px; height: 70px; top: -30px; left: 20px; } .c1::after { width: 50px; height: 50px; top: -20px; right: 20px; }
+        .c2 { width: 200px; height: 60px; top: 60%; left: -300px; animation-duration: 55s; animation-delay: 5s; transform: scale(0.8); } .c2::before { width: 80px; height: 80px; top: -40px; left: 30px; } .c2::after { width: 60px; height: 60px; top: -30px; right: 30px; }
+        @keyframes drift { to { transform: translateX(120vw); } }
 
-        .party-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: all 1.8s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; transform-style: preserve-3d; will-change: transform, opacity; pointer-events: none; }
-        body.is-opened .party-content { opacity: 1; transform: scale(1); transition-delay: 0.3s; pointer-events: auto; }
+        /* --- โซนงานวันเกิด --- */
+        .party-content { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.5); transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; transform-style: preserve-3d; }
+        body.is-opened .party-content { opacity: 1; transform: scale(1); transition-delay: 0.3s; }
 
-        /* --- เค้ก 3D Pixar --- */
-        .cake-container { position: relative; width: 280px; height: 220px; transform-style: preserve-3d; transform: rotateX(24deg) rotateY(-8deg) scale(var(--cake-scale)); animation: pixar-cake-float 6s ease-in-out infinite alternate; transition: all 1s ease; margin-top: -10vh; will-change: transform;}
-        .cake-board { position: absolute; top: 130px; width: 340px; height: 130px; background: #e6b800; border-radius: 50%; left: 50%; transform: translateX(-50%) translateZ(-70px); box-shadow: inset 10px 0 20px rgba(255,255,255,0.6), inset -20px 0 30px rgba(0,0,0,0.5), 0 30px 40px rgba(0,0,0,0.6); z-index: 0; }
-        .cake-board::before { content: ''; position: absolute; top: -8px; left: 2%; width: 96%; height: 96%; border-radius: 50%; background: #fff3cd; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.2), inset 0 5px 10px rgba(255,255,255,1); }
-
-        .layer { position: absolute; display: block; border-radius: 50%; left: 50%; transform: translateX(-50%); transform-style: preserve-3d; transition: background 1s ease; background: var(--cake-color-main); box-shadow: inset 0 8px 15px rgba(255,255,255,0.5), inset 0 -10px 20px rgba(0,0,0,0.2); }
-        .layer::after { content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%; box-shadow: inset 0 -10px 20px rgba(0,0,0,0.5), inset 0 3px 10px rgba(255,255,255,0.3); pointer-events: none; z-index: 10; mix-blend-mode: multiply;}
-        .layer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background-color: var(--cake-color-side); box-shadow: inset 15px 0 20px rgba(255,255,255,0.3), inset -35px 0 35px rgba(0,0,0,0.5), inset -5px 0 10px rgba(255,255,255,0.2), 0 15px 25px rgba(0,0,0,0.4); transition: background-color 1s ease; }
-        body.dreamy-mode .layer::before { background: linear-gradient(to bottom, var(--cake-color-main) 5%, var(--cake-color-side) 60%, rgba(20, 50, 100, 0.3) 100%); box-shadow: 0 15px 30px rgba(20, 50, 100, 0.3), inset 0 5px 10px rgba(255,255,255,0.5); }
+        /* --- เค้ก 3D รองรับการย่อขนาดบนมือถือ --- */
+        .cake-container { position: relative; width: 280px; height: 220px; transform-style: preserve-3d; transform: rotateX(15deg) scale(var(--cake-scale)); animation: float-cake-3d 3s ease-in-out infinite alternate; transition: all 1s ease; }
+        .layer { position: absolute; display: block; border-radius: 50%; left: 50%; transform: translateX(-50%); transform-style: preserve-3d; transition: background 1s ease; }
+        .layer::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; filter: brightness(0.8); box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: background-color 1s ease; }
+        .layer-bottom { top: 120px; width: 280px; height: 100px; z-index: 1; background: var(--cake-1); } .layer-bottom::before { background-color: var(--cake-1-side); transform: translateZ(-50px); }
+        .layer-middle { top: 75px; width: 220px; height: 85px; z-index: 2; background: var(--cake-2); } .layer-middle::before { background-color: var(--cake-2-side); transform: translateZ(-35px); }
+        .layer-top { top: 35px; width: 160px; height: 75px; z-index: 3; background: var(--cake-3); } .layer-top::before { background-color: var(--cake-3-side); transform: translateZ(-25px); }
+        .icing { position: absolute; top: 65px; left: 50%; width: 170px; height: 75px; border-radius: 50%; background: repeating-conic-gradient(from 0deg, #ffffff 0deg 20deg, #f2f2f2 20deg 40deg); z-index: 4; opacity: 0.95; transform: translateX(-50%) translateZ(5px); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+        .icing::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background-image: radial-gradient(circle, #ff3366 3px, transparent 4px), radial-gradient(circle, #00ffcc 3px, transparent 4px), radial-gradient(circle, #ffd700 3px, transparent 4px), radial-gradient(circle, #aa00ff 3px, transparent 4px), radial-gradient(circle, #ff8c00 3px, transparent 4px); background-size: 30px 30px, 45px 25px, 25px 40px, 35px 35px, 40px 40px; background-position: 5px 5px, 15px 10px, 20px 20px, 10px 15px, 30px 5px; z-index: 5; opacity: 0.8; }
         
-        .layer-bottom { top: 120px; width: 280px; height: 100px; z-index: 1; --cake-color-main: var(--cake-1); --cake-color-side: var(--cake-1-side); background-image: radial-gradient(rgba(255,255,255,0.3) 15%, transparent 16%); background-size: 20px 20px; } .layer-bottom::before { transform: translateZ(-50px); }
-        .layer-middle { top: 75px; width: 220px; height: 85px; z-index: 2; --cake-color-main: var(--cake-2); --cake-color-side: var(--cake-2-side); background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 20px); } .layer-middle::before { transform: translateZ(-35px); }
-        .layer-top { top: 35px; width: 160px; height: 75px; z-index: 3; --cake-color-main: var(--cake-3); --cake-color-side: var(--cake-3-side); background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.2)), linear-gradient(-45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.2) 75%, rgba(255,255,255,0.2)); background-size: 20px 20px; } .layer-top::before { transform: translateZ(-25px); }
+        /* --- ระบบเป่าเทียน (ปรับให้กดง่ายขึ้นบนมือถือ) --- */
+        .candle-container { position: absolute; top: 0; left: 50%; transform: translateX(-50%) translateZ(25px); z-index: 100; display: flex; gap: 15px; transform-style: preserve-3d; }
+        .candle { position: relative; width: 10px; height: 35px; background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 5px, #fff 5px, #fff 10px); border-radius: 3px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
         
-        .icing { position: absolute; top: 10px; left: 50%; width: 180px; height: 85px; border-radius: 48% 52% 51% 49% / 55% 45% 55% 45%; background: #5f3030; z-index: 4; transform: translateX(-50%) translateZ(5px); box-shadow: inset 0 15px 15px rgba(255,255,255,1), inset 0 -15px 25px rgba(180,180,190,0.6), inset -15px 0 20px rgba(200,200,210,0.5), 0 10px 15px rgba(0,0,0,0.3); filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); }
-        .icing::after { content: ''; position: absolute; top: 15%; left: 15%; width: 25%; height: 15%; border-radius: 50%; background: rgba(255,255,255,0.9); box-shadow: 0 0 15px rgba(255,255,255,1); transform: rotate(-15deg); filter: blur(1.5px); z-index: 6; pointer-events: none; }
-        .icing::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background-image: radial-gradient(circle, #ff3366 4px, transparent 5px), radial-gradient(circle, #00ffcc 4px, transparent 5px), radial-gradient(circle, #ffd700 4px, transparent 5px), radial-gradient(circle, #aa00ff 4px, transparent 5px), radial-gradient(circle, #ff8c00 4px, transparent 5px); background-size: 35px 35px, 50px 30px, 30px 45px, 40px 40px, 45px 45px; background-position: 5px 5px, 15px 10px, 20px 20px, 10px 15px, 30px 5px; z-index: 5; opacity: 0.9; mix-blend-mode: multiply;}
-
-        .candle-container { position: absolute; top: 10px; left: 50%; transform: translateX(-50%) translateZ(25px); z-index: 100; display: flex; gap: 15px; transform-style: preserve-3d; }
-        .candle { position: relative; width: 12px; height: 35px; background: repeating-linear-gradient(45deg, #00ffcc, #00ffcc 5px, #ffffff 5px, #ffffff 10px); border-radius: 6px; box-shadow: inset 3px 0 5px rgba(255,255,255,0.8), inset -3px 0 5px rgba(0,0,0,0.4), 0 5px 5px rgba(0,0,0,0.3); }
-        .flame { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 50px; height: 60px; cursor: pointer; z-index: 150; background-color: rgba(255,255,255,0); }
-        .flame::after { content: ''; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 14px; height: 22px; border-radius: 50% 50% 20% 20%; background: radial-gradient(ellipse at bottom, #ffffff 0%, #ffff00 40%, #ff6600 100%); box-shadow: 0 -5px 15px #ffcc00, 0 -10px 30px #ff6600, 0 -20px 50px #ff0000; animation: flicker 0.8s infinite alternate; transition: all 0.5s ease; will-change: transform;}
+        /* 🚨 ขยายพื้นที่รับการสัมผัส (Touch Target) ให้กว้างขึ้น 🚨 */
+        .flame { 
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%); 
+            width: 40px; height: 50px; /* พื้นที่ล่องหนกว้างๆ ไว้รับนิ้ว */
+            cursor: pointer; z-index: 150; 
+        }
+        .flame::after { 
+            /* นี่คือตัวไฟจริงๆ */
+            content: ''; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); 
+            width: 12px; height: 18px; border-radius: 50% 50% 20% 20%; 
+            background: radial-gradient(ellipse at bottom, #ffff00 0%, #ff9900 60%, #ff3300 100%); 
+            box-shadow: 0 -5px 15px #ffcc00, 0 -10px 30px #ff6600, 0 -20px 50px #ff0000; 
+            animation: flicker 0.5s infinite alternate; transition: all 0.3s ease; 
+        }
         .flame.blown-out { pointer-events: none; } .flame.blown-out::after { transform: translateX(-50%) scale(0); opacity: 0; box-shadow: none; animation: none; }
 
-        .text-container { position: absolute; top: 72%; bottom: 5vh; left: 0; width: 100%; overflow-y: auto; text-align: center; padding: 20px; z-index: 20; transform: translate3d(0, 0, 30px); display: flex; flex-direction: column; justify-content: flex-start; align-items: center; box-sizing: border-box; scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.4) transparent; transition: all 1s ease; max-width: 79%; margin: 0 auto; left: 50%; transform: translate3d(-50%, 0, 30px); will-change: transform, opacity;}
-        .text-container.paper-background { background: #fffdf2; background-image: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,250,240,0.5)), url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.1' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0.9 0 0 0 0 0 0.85 0 0 0 0 0 0.8 0 0 0 0 0 0.3 0'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23a)' opacity='0.4'/%3E%3C/svg%3E"); border: 3px solid #e8d8c0; border-radius: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); --text-main-color: #ff0055 !important; --text-main-stroke: transparent !important; text-shadow: 1px 1px 2px rgba(0,0,0,0.2) !important; }
-        body.dreamy-mode .text-container.paper-background { --text-main-color: #0d47a1 !important; }
-        .text-container::-webkit-scrollbar { width: 5px; } .text-container::-webkit-scrollbar-track { background: transparent; } .text-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.4); border-radius: 10px; }
-        .hint-text { font-family: 'Mali', sans-serif; font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 600; color: var(--hint-color); text-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px rgba(255,255,255,0.8); animation: pulse-clear 2s infinite alternate; transition: color 1s ease, opacity 0.5s ease; margin-bottom: 10px;}
-        .typewriter-text { font-family: 'Mali', sans-serif; font-size: clamp(1.2rem, 5vw, 2.2rem); line-height: 1.6; font-weight: 600; color: var(--text-main-color); -webkit-text-stroke: 1.5px var(--text-main-stroke); text-shadow: var(--text-shadow); transition: all 0.5s ease; margin-top: 5px; max-width: 100%; }
-        .cursor { display: inline-block; width: 4px; height: 1.2em; background-color: var(--text-main-color); vertical-align: text-bottom; margin-left: 2px; animation: blink 1s infinite; opacity: 0; }
+        /* --- ข้อความ Typewriter --- */
+        .text-container { text-align: center; margin-top: 50px; padding: 0 15px; z-index: 20; transform: translateZ(30px); min-height: 120px; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; box-sizing: border-box; }
+        
+        .hint-text { font-family: 'Mali', sans-serif; font-size: clamp(1rem, 4vw, 1.5rem); font-weight: 600; color: var(--hint-color); text-shadow: 0 2px 5px rgba(0,0,0,0.4), 0 0 10px rgba(255,255,255,0.8); animation: pulse-clear 1.5s infinite alternate; transition: color 1s ease, opacity 0.5s ease; margin-bottom: 10px;}
+        
+        .typewriter-text { font-family: 'Mali', sans-serif; font-size: clamp(1.2rem, 5vw, 2.2rem); line-height: 1.6; font-weight: 600; color: var(--text-main-color); -webkit-text-stroke: 1.5px var(--text-main-stroke); text-shadow: var(--text-shadow); transition: all 1s ease; margin-top: 5px; max-width: 90%; }
+        
+        .cursor { display: inline-block; width: 4px; height: 1.2em; background-color: var(--text-main-color); vertical-align: text-bottom; margin-left: 2px; animation: blink 0.8s infinite; opacity: 0; }
         body.typing-active .cursor { opacity: 1; }
 
-        .cartoon-placeholder { position: absolute; font-size: 4rem; top: 20%; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); animation: bounce-cartoon 3s ease-in-out infinite; z-index: 5; will-change: transform;} .cp-left { left: 15%; animation-delay: 0s; } .cp-right { right: 15%; animation-delay: 1.5s; }
+        /* --- ของตกแต่ง --- */
+        .sparkles-container { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 15; } .sparkle { position: absolute; width: 5px; height: 5px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700, 0 0 20px #ffffff; animation: float-sparkle 3s ease-in-out infinite; opacity: 0; } body.is-opened .sparkle { opacity: 1; } .sp1 { top: 30%; left: 30%; animation-delay: 0s; } .sp2 { top: 70%; left: 70%; animation-delay: 0.5s; } .sp3 { top: 40%; left: 80%; animation-delay: 1s; } .sp4 { top: 80%; left: 20%; animation-delay: 1.5s; } .sp5 { top: 20%; left: 60%; animation-delay: 2s; }
+        .cartoon-placeholder { position: absolute; font-size: 4rem; bottom: 15%; filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); animation: bounce-cartoon 2s ease-in-out infinite; z-index: 5;} .cp-left { left: 10%; animation-delay: 0s; } .cp-right { right: 10%; animation-delay: 1s; }
         
-        .gift-container { position: absolute; z-index: 999; cursor: pointer; animation: jiggle 3s infinite ease-in-out; transition: all 0.8s ease; display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 0 15px rgba(255, 51, 102, 0.4)); will-change: transform;}
-        .gift-lid { width: 170px; height: 40px; background-color: #ff3366; border-radius: 5px; position: relative; box-shadow: 0 5px 10px rgba(0,0,0,0.3); transition: transform 0.8s ease, opacity 0.8s ease; z-index: 2; background: linear-gradient(to bottom, #ff5a82, #ff3366); }
+        /* --- กล่องของขวัญ --- */
+        .gift-container { position: absolute; z-index: 100; cursor: pointer; animation: jiggle 2s infinite ease-in-out; transition: all 0.5s ease; display: flex; flex-direction: column; align-items: center; filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.5)); }
+        .gift-lid { width: 170px; height: 40px; background-color: #ff3366; border-radius: 5px; position: relative; box-shadow: 0 5px 10px rgba(0,0,0,0.3); transition: transform 0.5s ease, opacity 0.5s ease; z-index: 2; background: linear-gradient(to bottom, #ff5a82, #ff3366); }
         .gift-lid::before, .gift-lid::after { content: ''; position: absolute; width: 30px; height: 30px; border: 5px solid #ffd700; border-radius: 50%; bottom: 20px; box-shadow: 0 0 10px #ffd700; } .gift-lid::before { left: 40px; border-bottom-color: transparent; border-right-color: transparent; transform: rotate(-45deg); } .gift-lid::after { right: 40px; border-bottom-color: transparent; border-left-color: transparent; transform: rotate(45deg); }
         .lid-ribbon { position: absolute; width: 25px; height: 100%; background-color: #ffd700; left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px #ffd700; }
-        .gift-box { width: 150px; height: 130px; background-color: #e60039; position: relative; border-radius: 0 0 10px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); transition: transform 0.8s ease, opacity 0.8s ease; z-index: 1; background: linear-gradient(to bottom, #ff3366, #c70039); }
+        .gift-box { width: 150px; height: 130px; background-color: #e60039; position: relative; border-radius: 0 0 10px 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.4); transition: transform 0.5s ease, opacity 0.5s ease; z-index: 1; background: linear-gradient(to bottom, #ff3366, #c70039); }
         .box-ribbon { position: absolute; width: 25px; height: 100%; background-color: #ffd700; left: 50%; transform: translateX(-50%); box-shadow: 0 0 5px #ffd700; }
-        .click-text { color: #fff; text-align: center; margin-top: 25px; font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; animation: pulse-clear 2s infinite alternate; transition: opacity 0.5s ease; text-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 15px #ff3366; }
+        .click-text { color: #fff; text-align: center; margin-top: 25px; font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; animation: pulse-clear 1s infinite alternate; transition: opacity 0.3s ease; text-shadow: 0 4px 10px rgba(0,0,0,0.8), 0 0 15px #ff3366; }
         body.is-opened .gift-lid { transform: translateY(-120px) rotate(20deg) scale(1.1); opacity: 0; } body.is-opened .gift-box { transform: translateY(120px) scale(0.7); opacity: 0; } body.is-opened .click-text { animation: none; opacity: 0; visibility: hidden; } body.is-opened .gift-container { pointer-events: none; }
 
-        #fxCanvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 3; }
+        /* --- Elements ลอยด้วย JS --- */
+        .firework-particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; left: var(--startX); top: var(--startY); background-color: var(--color); z-index: 2; pointer-events: none; box-shadow: 0 0 8px currentColor; animation: realistic-explosion 1.8s ease-out forwards; }
+        .balloon { position: absolute; bottom: -150px; width: 60px; height: 80px; border-radius: 50%; background-color: var(--color); box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), inset 10px 10px 20px rgba(255,255,255,0.4); z-index: 5; pointer-events: none; animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; } .balloon::after { content: ''; position: absolute; bottom: -20px; left: 50%; width: 2px; height: 25px; background: rgba(255,255,255,0.6); transform: translateX(-50%); }
+        .floating-emoji { position: absolute; bottom: -100px; font-size: 3.5rem; z-index: 6; pointer-events: none; filter: drop-shadow(0 0 10px rgba(255,255,255,0.4)); animation: floatUp var(--duration) linear forwards, sway var(--swayDuration) ease-in-out infinite alternate; }
+        .confetti { position: absolute; width: 10px; height: 10px; background: #ffd700; top: 50%; left: 50%; z-index: 1000; pointer-events: none; opacity: 0; }
 
+        /* --- Animations --- */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes jiggle { 0%, 100% { transform: rotate(-3deg) scale(1); } 50% { transform: rotate(3deg) scale(1.05); } }
         @keyframes pulse-clear { from { opacity: 0.8; transform: scale(1); } to { opacity: 1; transform: scale(1.05); } }
         @keyframes flicker { 0% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(0.9, 1.1) rotate(-2deg); height: 16px; } 100% { transform: translateX(-50%) scale(1.1, 0.9) rotate(2deg); } }
-        @keyframes starMoveFast { from { transform: translateY(0); } to { transform: translateY(100%); } }
-        @keyframes rotate-rays { from { transform: translate3d(-50%, -50%, 0) rotate(0deg); } to { transform: translate3d(-50%, -50%, 0) rotate(360deg); } }
-        @keyframes bounce-cartoon { 0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); } 50% { transform: translate3d(0, -15px, 0) rotate(5deg); } }
-        @keyframes shake-screen { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(3px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-        @keyframes pixar-cake-float { 0% { transform: rotateX(22deg) rotateY(-8deg) translate3d(0, 5px, 0) scale(var(--cake-scale)); } 100% { transform: rotateX(25deg) rotateY(-5deg) translate3d(0, -15px, 0) scale(var(--cake-scale)); } }
-        @keyframes drift { to { transform: translate3d(120vw, 0, 0); } }
+        @keyframes starMove { from { background-position: 0 0, 0 0, 0 0; } to { background-position: -1000px 500px, -500px 1000px, 500px 500px; } }
+        @keyframes rotate-rays { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes float-sparkle { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(20px, -20px); } }
+        @keyframes bounce-cartoon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(5deg); } }
+        @keyframes shake-screen { 10%, 90% { transform: translate3d(-2px, 0, 0); } 20%, 80% { transform: translate3d(4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-6px, 0, 0); } 40%, 60% { transform: translate3d(6px, 0, 0); } }
+        @keyframes confetti-explosion { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; } }
+        @keyframes realistic-explosion { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--endX), var(--endY)) scale(0.5); opacity: 0; } }
+        @keyframes floatUp { to { transform: translateY(-120vh) scale(var(--scale)); } }
+        @keyframes sway { from { margin-left: -30px; } to { margin-left: 30px; } }
+        /* รองรับตัวแปรการย่อส่วนของเค้ก */
+        @keyframes float-cake-3d { 0% { transform: rotateX(15deg) translateY(0px) scale(var(--cake-scale)); } 100% { transform: rotateX(15deg) translateY(-20px) scale(var(--cake-scale)); } }
     </style>
 </head>
 <body>
-
-    <div class="in-app-warning" id="inAppWarning">
-        <h2>ถ้าต้องการดูลื่นไหลกว่านี้</h2>
-        <p>ให้เปิดผ่านเบราว์เซอร์นะครับ</p>
-        <button class="btn-close-warning" onclick="document.getElementById('inAppWarning').style.display='none'">ฉันเข้าใจแล้ว</button>
-    </div>
 
     <button class="theme-toggle" id="themeToggle" title="เปลี่ยนบรรยากาศ">
         <span id="themeIcon">🌙</span> <span id="themeText">Night</span>
@@ -155,9 +189,7 @@
         <div class="cloud c1"></div><div class="cloud c2"></div>
     </div>
     <div class="light-rays"></div>
-
-    <canvas id="fxCanvas"></canvas>
-
+    
     <div class="gift-container" id="giftBox">
         <div class="gift-lid"><div class="lid-ribbon"></div></div>
         <div class="gift-box"><div class="box-ribbon"></div></div>
@@ -165,11 +197,13 @@
     </div>
 
     <div class="party-content">
+        <div class="sparkles-container">
+            <div class="sparkle sp1"></div><div class="sparkle sp2"></div><div class="sparkle sp3"></div><div class="sparkle sp4"></div><div class="sparkle sp5"></div>
+        </div>
         <div class="cartoon-placeholder cp-left">🥳</div>
         <div class="cartoon-placeholder cp-right">🎈</div>
 
         <div class="cake-container">
-            <div class="cake-board"></div> 
             <div class="candle-container">
                 <div class="candle"><div class="flame" title="แตะเพื่อดับไฟ!"></div></div>
                 <div class="candle"><div class="flame" title="แตะเพื่อดับไฟ!"></div></div>
@@ -181,8 +215,8 @@
             <div class="layer layer-bottom"></div>
         </div>
 
-        <div class="text-container" id="scrollContainer">
-            <div class="hint-text" id="hintText">👆 ลองแตะที่ไฟเพื่อเป่าเทียนดูสิ!😊</div>
+        <div class="text-container">
+            <div class="hint-text" id="hintText">👆 แตะที่ไฟเพื่อเป่าเทียนอธิษฐานสิ!</div>
             <div class="typewriter-text">
                 <span id="typedMsg"></span><span class="cursor"></span>
             </div>
@@ -190,43 +224,46 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ua = navigator.userAgent || navigator.vendor || window.opera;
-            const isInApp = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Line") > -1) || (ua.indexOf("Instagram") > -1) || (ua.indexOf("MicroMessenger") > -1); 
-            if (isInApp) document.getElementById('inAppWarning').classList.add('show');
-            initSparkles();
-        });
-
+        // ==========================================
+        // 1. ระบบรับข้อมูลจาก URL (URL Parameters)
+        // ==========================================
         const urlParams = new URLSearchParams(window.location.search);
+        
+        // --- ส่วนจัดการข้อความ ---
         const customText = urlParams.get('text');
-        let messages = ["สุขสันต์วันเกิดนะครับ! 🎂✨", "ขอให้ปีนี้เป็นปีที่ใจดีกับคุณมากๆ", "มีความสุข สุขภาพแข็งแรง", "และมีรอยยิ้มที่สดใสแบบนี้ตลอดไปเลยนะ 💖"];
-        if (customText) messages = customText.split('|');
+        
+        // ข้อความเริ่มต้น (กรณีไม่มีการส่ง URL Parameter มา)
+        let messages = [
+            "สุขสันต์วันเกิดนะครับ! 🎂✨",
+            "ขอให้ปีนี้เป็นปีที่ใจดีกับคุณมากๆ",
+            "มีความสุข สุขภาพแข็งแรง",
+            "และมีรอยยิ้มที่สดใสแบบนี้ตลอดไปเลยนะ 💖"
+        ];
 
-        const customImgParam = urlParams.get('img');
-        let userPhotoUrls = []; 
-        let loadedImages = []; 
-
-        if (customImgParam) {
-            const decodedParam = decodeURIComponent(customImgParam);
-            userPhotoUrls = decodedParam.split(',').filter(url => url.trim() !== '');
-            
-            if (userPhotoUrls.length > 0) {
-                const placeholders = document.querySelectorAll('.cartoon-placeholder');
-                placeholders.forEach((el, index) => {
-                    const imgUrl = userPhotoUrls[index % userPhotoUrls.length];
-                    el.innerHTML = `<img src="${imgUrl}" style="width: 100px; height: 100px; border-radius: 8px; object-fit: cover; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.4);">`;
-                    el.style.filter = 'none'; 
-                });
-
-                userPhotoUrls.forEach(url => {
-                    let img = new Image();
-                    img.crossOrigin = "Anonymous"; 
-                    img.src = url;
-                    loadedImages.push(img);
-                });
-            }
+        if (customText) {
+            // ถ้า URL มีคำว่า ?text=... ให้แยกข้อความด้วยเครื่องหมาย | เป็นแต่ละบรรทัด
+            messages = customText.split('|');
         }
 
+        // --- ส่วนจัดการรูปภาพ ---
+        const customImg = urlParams.get('img');
+        if (customImg) {
+            // ถอดรหัส URL (เผื่อมีอักขระพิเศษ)
+            const decodedImgUrl = decodeURIComponent(customImg);
+            
+            const placeholders = document.querySelectorAll('.cartoon-placeholder');
+            placeholders.forEach(el => {
+                // แทนที่ Emoji 🥳 ด้วยแท็กรูปภาพ <img> พร้อมตกแต่งให้เป็นวงกลมสวยๆ
+                el.innerHTML = `<img src="${decodedImgUrl}" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid white; box-shadow: 0 5px 20px rgba(0,0,0,0.5);" alt="Birthday Photo">`;
+                el.style.filter = 'none'; // เอาเงาเรืองแสงของเดิมออกเพื่อความคมชัดของภาพ
+            });
+        }
+
+        // ==========================================
+        // 2. ระบบการทำงานหลักของการ์ด (เปิดกล่อง, เป่าเทียน, เอฟเฟกต์)
+        // ==========================================
+        
+        // --- ระบบ Theme Toggle ---
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         const themeText = document.getElementById('themeText');
@@ -239,346 +276,180 @@
             themeText.innerText = isDreamy ? 'Dreamy' : 'Night';
         });
 
-        // ==========================================
-        // ✨ CANVAS ENGINE ✨
-        // ==========================================
-        const canvas = document.getElementById('fxCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let bgSparkles = []; 
+        // --- ระบบเปิดกล่อง และเล่นเพลง ---
+        const giftBox = document.getElementById('giftBox');
+        const bgMusic = document.getElementById('bgMusic');
+        let partyStarted = false;
+        let intervals = []; 
 
-        class Sparkle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1; 
-                const sparkleColors = ['#ffd700', '#ffffff', '#ff3366', '#00ffcc', '#ff9933', '#a1c4fd', '#ff6b9e'];
-                this.color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-                this.alpha = Math.random();
-                this.fadeSpeed = (Math.random() * 0.005) + 0.001; 
-                this.fadingOut = Math.random() > 0.5;
-            }
-            update() {
-                if (this.fadingOut) {
-                    this.alpha -= this.fadeSpeed;
-                    if (this.alpha <= 0.1) this.fadingOut = false;
-                } else {
-                    this.alpha += this.fadeSpeed;
-                    if (this.alpha >= 0.8) this.fadingOut = true; 
-                }
-            }
-            draw(ctx) {
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                
-                if(this.alpha > 0.5 && window.innerWidth > 600) {
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = this.color;
-                    ctx.fill();
-                    ctx.shadowBlur = 0; 
-                }
-                ctx.globalAlpha = 1;
-            }
-        }
-
-        const nightColors = ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ffffff', '#ff6b9e'];
-        const dreamyColors = ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ffe1e8', '#d4e6ff'];
-        const emojisList = ['☁️', '🦄', '💖', '✨', '🧁', '🥳', '🎉', '🎁', '🎈'];
-        function getColors() { return isDreamy ? dreamyColors : nightColors; }
-
-        class Particle {
-            constructor(type, x, y) {
-                this.type = type; 
-                this.x = x;
-                this.y = y;
-                this.colors = getColors();
-                this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
-                
-                if (type === 'firework') {
-                    this.size = Math.random() * 4 + 2;
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = Math.random() * 5 + 1.5; 
-                    this.vx = Math.cos(angle) * speed;
-                    this.vy = Math.sin(angle) * speed;
-                    this.life = 1;
-                    this.decay = Math.random() * 0.008 + 0.005; 
-                    this.gravity = 0.04; 
-                } else if (type === 'confetti') {
-                    this.size = Math.random() * 8 + 6;
-                    this.vx = (Math.random() - 0.5) * 3;
-                    this.vy = Math.random() * -2 - 0.5; 
-                    this.gravity = 0.03; 
-                    this.rotation = Math.random() * Math.PI * 2;
-                    this.rotSpeed = (Math.random() - 0.5) * 0.08; 
-                } else if (type === 'balloon') {
-                    // ✨ ปรับลูกโป่งให้ขนาดเล็กลง (10px ถึง 22px)
-                    this.size = Math.random() * 25 + 10; 
-                    this.vy = Math.random() * 0.6 + 0.2; 
-                    this.angle = Math.random() * Math.PI * 2;
-                    this.swing = Math.random() * 0.015 + 0.005; 
-                } else if (type === 'emoji') {
-                    // ✨ ปรับอิโมจิให้ขนาดเล็กลง (15px ถึง 30px)
-                    this.size = Math.random() * 20 + 10; 
-                    this.vy = Math.random() * 0.6 + 0.2; 
-                    this.angle = Math.random() * Math.PI * 2;
-                    this.swing = Math.random() * 0.015 + 0.005; 
-                    this.text = emojisList[Math.floor(Math.random() * emojisList.length)];
-                } else if (type === 'photo') {
-                    // ขนาดรูปลอย (12px ถึง 28px รัศมี)
-                    this.size = Math.random() * 16 + 12; 
-                    this.vy = Math.random() * 0.6 + 0.2; 
-                    this.angle = Math.random() * Math.PI * 2;
-                    this.swing = Math.random() * 0.015 + 0.005; 
-                    if (loadedImages.length > 0) {
-                        this.img = loadedImages[Math.floor(Math.random() * loadedImages.length)];
-                        this.rotation = (Math.random() - 0.5) * 0.1; 
-                    } else {
-                        this.type = 'balloon'; this.size = Math.random() * 12 + 10;
-                    }
-                }
-            }
-
-            update() {
-                if (this.type === 'firework') {
-                    this.vx *= 0.94; 
-                    this.vy *= 0.94;
-                    this.vy += this.gravity;
-                    this.x += this.vx;
-                    this.y += this.vy;
-                    this.life -= this.decay;
-                } else if (this.type === 'confetti') {
-                    this.vy += this.gravity;
-                    this.x += this.vx + Math.sin(this.rotation) * 0.8;
-                    this.y += this.vy;
-                    this.rotation += this.rotSpeed;
-                } else if (this.type === 'balloon' || this.type === 'emoji' || this.type === 'photo') {
-                    this.y -= this.vy;
-                    this.x += Math.sin(this.angle) * 0.5; 
-                    this.angle += this.swing;
-                }
-            }
-
-            draw() {
-                if (this.type === 'firework' && this.life > 0) {
-                    ctx.globalAlpha = this.life;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.fill();
-                    ctx.globalAlpha = 1;
-                } else if (this.type === 'confetti') {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.rotation);
-                    ctx.fillStyle = this.color;
-                    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size * 0.6);
-                    ctx.restore();
-                } else if (this.type === 'balloon') {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(Math.sin(this.angle) * 0.05);
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, this.size, this.size * 1.2, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.moveTo(0, this.size * 1.2);
-                    ctx.lineTo(-3, this.size * 1.2 + 5);
-                    ctx.lineTo(3, this.size * 1.2 + 5);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.moveTo(0, this.size * 1.2 + 5);
-                    ctx.lineTo(0, this.size * 1.2 + 20);
-                    ctx.strokeStyle = "rgba(255,255,255,0.6)";
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.ellipse(-this.size*0.3, -this.size*0.4, this.size*0.2, this.size*0.4, Math.PI/6, 0, Math.PI*2);
-                    ctx.fillStyle = "rgba(255,255,255,0.4)";
-                    ctx.fill();
-                    ctx.restore();
-                } else if (this.type === 'emoji') {
-                    ctx.font = `${this.size}px Arial`;
-                    ctx.textAlign = "center";
-                    ctx.textBaseline = "middle";
-                    ctx.fillText(this.text, this.x, this.y);
-                } else if (this.type === 'photo' && this.img && this.img.complete) {
-                    ctx.save();
-                    ctx.translate(this.x, this.y);
-                    ctx.rotate(this.rotation + Math.sin(this.angle) * 0.05); 
-                    
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.size + 3, 0, Math.PI * 2);
-                    ctx.fillStyle = "white";
-                    ctx.fill();
-                    
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-                    ctx.clip();
-
-                    const img = this.img;
-                    let sWidth, sHeight, sx, sy;
-                    const aspectRatio = img.width / img.height;
-
-                    if (aspectRatio > 1) { 
-                        sHeight = img.height;
-                        sWidth = img.height;
-                        sx = (img.width - sWidth) / 2;
-                        sy = 0;
-                    } else { 
-                        sWidth = img.width;
-                        sHeight = img.width;
-                        sx = 0;
-                        sy = (img.height - sHeight) / 2;
-                    }
-                    
-                    ctx.drawImage(img, sx, sy, sWidth, sHeight, -this.size, -this.size, this.size * 2, this.size * 2);
-                    ctx.restore();
-                }
-            }
-        }
-
-        function initSparkles() {
-            bgSparkles = [];
-            const count = window.innerWidth < 600 ? 50 : 150; 
-            for(let i=0; i<count; i++) {
-                bgSparkles.push(new Sparkle());
-            }
-        }
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            initSparkles(); 
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        giftBox.addEventListener('click', function() {
+            if(partyStarted) return;
+            partyStarted = true;
             
-            for (let i = 0; i < bgSparkles.length; i++) {
-                bgSparkles[i].update();
-                bgSparkles[i].draw(ctx);
-            }
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.update();
-                p.draw();
-                // จำกัดจำนวนถ้ามันเกินจอไปมาก
-                if (p.life <= 0 || p.y > canvas.height + 100 || p.y < -150) {
-                    particles.splice(i, 1);
-                }
-            }
-            requestAnimationFrame(animateCanvas);
-        }
-        animateCanvas(); 
-
-        // ✨ แก้ไขบัคของสะสมเมื่อสลับหน้าจอ (Visibility Check) ✨
-        function shootFireworks() {
-            if (document.hidden) return; // ถ้าพับหน้าจออยู่ ไม่ต้องยิง
-            if (isDreamy && Math.random() > 0.5) return;
-            let cx = Math.random() * canvas.width;
-            let cy = Math.random() * (canvas.height * 0.6);
-            let count = window.innerWidth < 600 ? 40 : 80;
-            for(let i=0; i<count; i++) {
-                particles.push(new Particle('firework', cx, cy));
-            }
-        }
-
-        function dropConfetti(amount) {
-            if (document.hidden) return;
-            for(let i=0; i<amount; i++) {
-                particles.push(new Particle('confetti', canvas.width/2, canvas.height/2));
-            }
-        }
-
-        function spawnFloater() {
-            if (document.hidden) return; // ถ้าพับหน้าจออยู่ ไม่ต้องปล่อยของลอย
-            let x = Math.random() * canvas.width;
-            let y = canvas.height + 50;
-            let rand = Math.random();
-            if (loadedImages.length > 0 && rand > 0.6) {
-                particles.push(new Particle('photo', x, y)); 
-            } else if (rand > 0.3) {
-                particles.push(new Particle('balloon', x, y)); 
-            } else {
-                particles.push(new Particle('emoji', x, y)); 
-            }
-        }
-
-        // 4. การกดปุ่ม
-        const giftBoxEl = document.getElementById('giftBox');
-        const bgMusicEl = document.getElementById('bgMusic');
-        let isStarted = false;
-        let pIntervals = [];
-
-        giftBoxEl.addEventListener('click', function() {
-            if(isStarted) return;
-            isStarted = true;
-            bgMusicEl.play().catch(e => console.log("Allow audio"));
+            bgMusic.play().catch(e => console.log("กรุณาอนุญาตให้เล่นเสียงในเบราว์เซอร์"));
+            
             document.body.classList.add('is-opened');
             document.body.classList.add('is-shaking');
-            setTimeout(() => document.body.classList.remove('is-shaking'), 800);
+            setTimeout(() => document.body.classList.remove('is-shaking'), 500);
             
-            dropConfetti(50); 
-            pIntervals.push(setInterval(spawnFloater, 1200)); 
+            createConfetti();
+
+            intervals.push(setInterval(createBalloon, 2000));
+            intervals.push(setInterval(createFloatingEmoji, 1500));
         });
 
-        const flameEls = document.querySelectorAll('.flame');
-        const hintTextEl = document.getElementById('hintText');
-        let extinguishCount = 0;
+        // --- ระบบเป่าเทียน (จิ้มง่ายขึ้นบนมือถือ) ---
+        const flames = document.querySelectorAll('.flame');
+        const hintText = document.getElementById('hintText');
+        let blownCount = 0;
 
-        flameEls.forEach(flame => {
+        flames.forEach(flame => {
             flame.addEventListener('click', function() {
                 if (!this.classList.contains('blown-out')) {
                     this.classList.add('blown-out');
-                    extinguishCount++;
-                    dropConfetti(30); 
+                    blownCount++;
+                    
+                    createConfetti(20); 
 
-                    if (extinguishCount === flameEls.length) {
-                        hintTextEl.style.opacity = '0'; 
+                    if (blownCount === flames.length) {
+                        hintText.style.opacity = '0'; 
                         setTimeout(() => {
-                            hintTextEl.style.display = 'none';
-                            pIntervals.push(setInterval(shootFireworks, 1800)); 
-                            dropConfetti(150); 
-                            startTypewriter(); 
-                        }, 800);
+                            hintText.style.display = 'none';
+                            startPartyAndTypewriter(); 
+                        }, 500);
                     }
                 }
             });
         });
 
-        function startTypewriter() {
-            document.body.classList.add('typing-active');
-            const scrollBox = document.getElementById('scrollContainer'); 
-            scrollBox.classList.add('paper-background');
+        // --- เซอร์ไพรส์ชุดใหญ่ & Typewriter ---
+        function startPartyAndTypewriter() {
+            intervals.push(setInterval(launchRealisticFirework, 1200));
+            createConfetti(100);
 
+            document.body.classList.add('typing-active');
             let lineIndex = 0;
             let charIndex = 0;
             const typedEl = document.getElementById('typedMsg');
-            
+
             function typeWriter() {
+                // จะสังเกตว่ามันดึงตัวแปร 'messages' ที่เราเซ็ตค่าไว้ด้านบนมาพิมพ์อัตโนมัติแล้ว
                 if (lineIndex < messages.length) {
                     if (charIndex < messages[lineIndex].length) {
                         typedEl.innerHTML += messages[lineIndex].charAt(charIndex);
                         charIndex++;
-                        scrollBox.scrollTop = scrollBox.scrollHeight;
-                        setTimeout(typeWriter, 120); 
+                        setTimeout(typeWriter, 100); 
                     } else {
                         typedEl.innerHTML += "<br><br>";
                         lineIndex++;
                         charIndex = 0;
-                        scrollBox.scrollTop = scrollBox.scrollHeight;
-                        setTimeout(typeWriter, 1000); 
+                        setTimeout(typeWriter, 800); 
                     }
                 }
             }
-            setTimeout(typeWriter, 1500); 
+            setTimeout(typeWriter, 1000); 
+        }
+
+        // --- ฟังก์ชัน Visual Effects ---
+        function launchRealisticFirework() {
+            if(isDreamy && Math.random() > 0.5) return; 
+
+            const startX = Math.random() * window.innerWidth + 'px';
+            const startY = (Math.random() * window.innerHeight * 0.6) + 'px';
+            const colors = isDreamy 
+                ? ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ff99a8'] 
+                : ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ffffff', '#ff6b9e']; 
+                
+            const baseColor = colors[Math.floor(Math.random() * colors.length)];
+            const particleCount = (window.innerWidth < 600) ? 40 : (isDreamy ? 50 : 80); 
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('firework-particle');
+                particle.style.setProperty('--startX', startX);
+                particle.style.setProperty('--startY', startY);
+                particle.style.setProperty('--color', baseColor);
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 80 + Math.random() * 250; 
+                particle.style.setProperty('--endX', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--endY', Math.sin(angle) * distance + 'px');
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1800);
+            }
+        }
+
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            const colors = isDreamy
+                ? ['#ffb6c1', '#a1c4fd', '#fdfbfb', '#ffe1e8', '#d4e6ff'] 
+                : ['#ff3366', '#ffd700', '#00ffcc', '#ff9933', '#ff6b9e', '#4facfe'];
+            balloon.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
+            balloon.style.left = Math.random() * 90 + '%';
+            
+            const scale = 0.8 + Math.random() * 0.5;
+            balloon.style.transform = `scale(${scale})`;
+            balloon.style.setProperty('--scale', scale);
+            balloon.style.setProperty('--duration', (15 + Math.random() * 10) + 's');
+            balloon.style.setProperty('--swayDuration', (3 + Math.random() * 3) + 's');
+            
+            document.body.appendChild(balloon);
+            setTimeout(() => balloon.remove(), 25000);
+        }
+
+        function createFloatingEmoji() {
+            const emojiEl = document.createElement('div');
+            emojiEl.classList.add('floating-emoji');
+            
+            const emojis = isDreamy 
+                ? ['☁️', '🦄', '💖', '✨', '🧁']
+                : ['🥳', '🥳', '🎉', '🎁', '✨', '🎈'];
+            
+            // ถ้ามีการส่งรูปภาพมาทาง URL เราจะเปลี่ยนอิโมจิที่ลอยๆ ให้เป็นรูปภาพลูกค้าได้ด้วย! (อัปเกรดความเท่)
+            const customImg = urlParams.get('img');
+            if (customImg && Math.random() > 0.5) { // ให้ลอยปนๆ กันระหว่างรูปกับอิโมจิ
+                emojiEl.innerHTML = `<img src="${decodeURIComponent(customImg)}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid white;">`;
+                emojiEl.style.filter = 'none';
+            } else {
+                emojiEl.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            }
+
+            emojiEl.style.left = Math.random() * 90 + '%';
+            
+            const scale = 0.6 + Math.random() * 0.6;
+            emojiEl.style.transform = `scale(${scale})`;
+            emojiEl.style.setProperty('--scale', scale);
+            emojiEl.style.setProperty('--duration', (12 + Math.random() * 8) + 's');
+            emojiEl.style.setProperty('--swayDuration', (2 + Math.random() * 3) + 's');
+            
+            document.body.appendChild(emojiEl);
+            setTimeout(() => emojiEl.remove(), 20000);
+        }
+
+        function createConfetti(amount = 80) {
+            const colors = isDreamy
+                ? ['#ffb6c1', '#a1c4fd', '#ffffff']
+                : ['#ff6b9e', '#4facfe', '#fad961', '#ffffff', '#00ffcc'];
+                
+            for (let i = 0; i < amount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 150 + Math.random() * 300;
+                confetti.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                confetti.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                confetti.style.setProperty('--rot', (Math.random() * 360 * 2) + 'deg');
+                confetti.style.animation = `confetti-explosion ${1 + Math.random() * 1.5}s ease-out forwards`;
+                
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 2500);
+            }
         }
     </script>
+
 </body>
 </html>
